@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henry's Professional Archive</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        header { text-align: center; padding: 50px 0; background: #2c3e50; color: white; border-radius: 10px; margin-bottom: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1本); gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        h2 { color: #2980b9; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .btn-admin { display: inline-block; margin-top: 50px; padding: 10px 20px; background: #27ae60; color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Henry's Digital Workspace</h1>
+    <p>Exploring English, Research, Medical Devices, and Travel</p>
+</header>
+
+<div class="grid">
+    <div class="card" onclick="location.href='#english'">
+        <h2>📚 English Studies</h2>
+        <p>Resources and journals for mastering professional English.</p>
+    </div>
+    <div class="card" onclick="location.href='#writing'">
+        <h2>✍️ Paper Writing</h2>
+        <p>Insights and tips on academic research and writing processes.</p>
+    </div>
+    <div class="card" onclick="location.href='#medical'">
+        <h2>🏥 Medical Device RnQ & AI</h2>
+        <p>Utilizing AI tools for Medical Device Regulation and Quality management.</p>
+    </div>
+    <div class="card" onclick="location.href='#travel'">
+        <h2>✈️ Travel Stories</h2>
+        <p>Memories and recommendations from my global journeys.</p>
+    </div>
+</div>
+
+<div style="text-align: center;">
+    <a href="https://github.com/hyeonho4ko/hyeonho4ko.github.io/issues" class="btn-admin">Admin Dashboard (Write a Post)</a>
+</div>
+
+</body>
+</html>
