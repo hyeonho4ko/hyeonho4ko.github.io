@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hyeonho's Archive</title>
     <style>
-        /* 기본 디자인 시스템 */
+        /* 핵심 디자인 시스템 */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             line-height: 1.6; 
@@ -16,7 +16,7 @@
             background-color: #f4f7f6; 
         }
 
-        /* 헤더 스타일: 클릭 시 새로고침 기능 포함 */
+        /* 헤더: 클릭 시 새로고침 기능 */
         header { 
             text-align: center; 
             padding: 60px 0; 
@@ -27,13 +27,12 @@
             transition: background 0.3s ease;
         }
         header:hover {
-            background: #34495e; /* 호버 시 약간 밝아짐 */
+            background: #34495e; /* 호버 시 시각적 피드백 */
         }
         .header-link {
             text-decoration: none;
             color: inherit;
             display: block;
-            cursor: pointer;
         }
         header h1 { margin: 0; font-size: 2.5rem; }
         header p { opacity: 0.8; font-weight: 300; margin-top: 10px; }
@@ -74,10 +73,10 @@
             margin-bottom: 0; 
         }
 
-        /* 관리자 및 푸터 섹션 */
+        /* 하단 관리자 섹션 */
         .admin-footer { 
             text-align: center; 
-            margin-top: 60px; 
+            margin: 60px 0; 
             padding-top: 30px; 
             border-top: 1px solid #ddd; 
         }
@@ -93,26 +92,16 @@
         }
         .btn-post:hover { background: #219150; }
 
-        /* 댓글 섹션 스타일 */
-        #comments-container {
-            max-width: 1000px;
-            margin: 60px auto 40px;
-            padding: 20px;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-        .comments-title {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            font-size: 1.2rem;
+        /* 반응형 모바일 대응 */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+            header { padding: 40px 20px; }
         }
     </style>
 </head>
 <body>
 
-<!-- 상단 타이틀 바: 클릭 시 현재 페이지(index.html)로 이동 -->
+<!-- 상단 타이틀: 클릭 시 메인으로 이동(새로고침) -->
 <header>
     <a href="index.html" class="header-link">
         <h1>Hyeonho's Digital Archive</h1>
@@ -120,55 +109,39 @@
     </a>
 </header>
 
+<!-- 카테고리 카드 섹션 -->
 <main class="grid">
-    <!-- 1. English Study -->
     <a href="list.html?label=English" class="card">
         <h2>📚 English Study</h2>
         <p>Journaling my journey to professional English fluency and communication.</p>
     </a>
 
-    <!-- 2. Epidemiology Study -->
     <a href="list.html?label=Epidemiology" class="card">
         <h2>🧬 Epidemiology Study</h2>
         <p>Research and data analysis on population health and disease patterns.</p>
     </a>
 
-    <!-- 3. Medical Device -->
     <a href="list.html?label=Medical" class="card">
         <h2>🏥 Medical Device R&Q</h2>
         <p>Strategic insights on RA/QA compliance and regulatory standards.</p>
     </a>
 
-    <!-- 4. AI Tools -->
     <a href="list.html?label=AI" class="card">
         <h2>🤖 AI Tools & Productivity</h2>
         <p>Leveraging AI like Gemini and Claude to enhance professional workflows.</p>
     </a>
 
-    <!-- 5. Travel Stories -->
     <a href="list.html?label=Travel" class="card">
         <h2>✈️ Travel Stories</h2>
         <p>Documenting memories and perspectives from global explorations.</p>
     </a>
 </main>
 
-<!-- 관리자 영역 -->
-<div class="admin-footer">
-    <p style="color: #999; font-size: 0.9rem;">Admin Only Section</p>
+<!-- 관리자 푸터 -->
+<footer class="admin-footer">
+    <p style="color: #999; font-size: 0.9rem; margin-bottom: 15px;">Admin Only Section</p>
     <a href="https://github.com/hyeonho4ko/hyeonho4ko.github.io/issues/new" class="btn-post">Write New Post</a>
-</div>
-
-<!-- 댓글 기능 섹션 (Utterances 적용) -->
-<div id="comments-container">
-    <div class="comments-title">💬 Conversation & Feedback</div>
-    <script src="https://utteranc.es/client.js"
-            repo="hyeonho4ko/hyeonho4ko.github.io"
-            issue-term="pathname"
-            theme="github-light"
-            crossorigin="anonymous"
-            async>
-    </script>
-</div>
+</footer>
 
 </body>
 </html>
