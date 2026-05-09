@@ -11,37 +11,34 @@
         header h1 { margin: 0; font-size: 2.5rem; }
         header p { opacity: 0.8; font-weight: 300; margin-top: 10px; }
         
-        /* 그리드 설정: 5개의 카드가 배치됩니다 */
+        /* 그리드 설정: 총 6개의 카드가 배치됩니다 */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         
-        /* 카드 공통 스타일 (div로 변경됨) */
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; }
+        /* 카드 공통 스타일 */
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; height: 280px; }
         .card:hover { transform: translateY(-5px); border-color: #2980b9; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
         
-        /* 카테고리 제목 (클릭 시 list.html로 이동) */
-        .card-title { margin-top: 0; font-size: 1.3rem; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; margin-bottom: 10px; }
+        .card-title { margin-top: 0; font-size: 1.25rem; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; margin-bottom: 10px; }
         .card-title a { text-decoration: none; color: #2980b9; display: block; }
-        .card-title a:hover { color: #1a252f; text-decoration: underline; }
-        
         .card-desc { font-size: 0.85rem; color: #7f8c8d; margin-top: 0; margin-bottom: 15px; }
         
-        /* 카드 내부의 최근 글 3개 리스트 스타일 */
-        .mini-post-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+        /* 리스트 공통 스타일 (Recent Posts & MDR News) */
+        .mini-post-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; overflow: hidden; }
         .mini-item { 
-            white-space: nowrap;      /* 한 줄 유지 */
-            overflow: hidden;         /* 넘치는 부분 숨김 */
-            text-overflow: ellipsis;  /* 말줄임표(...) 표시 */
-            margin-bottom: 8px;
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            margin-bottom: 8px; 
+            font-size: 0.9rem;
         }
-        .mini-item a { text-decoration: none; color: #444; font-size: 0.95rem; transition: color 0.2s; }
+        .mini-item a { text-decoration: none; color: #444; transition: color 0.2s; }
         .mini-item a:hover { color: #2980b9; text-decoration: underline; }
-        .empty-text { font-size: 0.85rem; color: #aaa; font-style: italic; }
+        .empty-text { font-size: 0.85rem; color: #aaa; font-style: italic; padding-top: 10px; text-align: center; }
         
-        /* Epidemiology 전용 하위 링크 버튼 스타일 */
-        .sub-links { display: flex; gap: 8px; margin-top: 20px; border-top: 1px dashed #eee; padding-top: 15px; }
-        .sub-link { flex: 1; text-align: center; padding: 8px; background: #ebf5fb; color: #2980b9; text-decoration: none; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
-        .sub-link:hover { background: #2980b9; color: white; }
-
+        /* Epidemiology 전용 하위 링크 */
+        .sub-links { display: flex; gap: 8px; margin-top: 10px; border-top: 1px dashed #eee; padding-top: 10px; }
+        .sub-link { flex: 1; text-align: center; padding: 6px; background: #ebf5fb; color: #2980b9; text-decoration: none; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
+        
         .admin-footer { text-align: center; margin-top: 60px; padding-top: 30px; border-top: 1px solid #ddd; }
         .btn-post { display: inline-block; padding: 12px 30px; background: #27ae60; color: white; text-decoration: none; border-radius: 30px; font-weight: bold; }
     </style>
@@ -55,44 +52,48 @@
     </header>
     
     <main class="grid">
-        <!-- 1. English -->
+        <!-- 1~5번 섹션 (기존과 동일) -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=English">📚 English Study</a></h2>
             <p class="card-desc">Journey to professional English fluency.</p>
-            <ul class="mini-post-list" id="list-English"><li class="empty-text">Loading posts...</li></ul>
+            <ul class="mini-post-list" id="list-English"><li class="empty-text">Loading...</li></ul>
         </div>
         
-        <!-- 2. Epidemiology -->
         <div class="card">
-            <h2 class="card-title"><a href="javascript:void(0)" style="cursor:default; color:#2980b9;">🧬 Epidemiology</a></h2>
+            <h2 class="card-title"><a href="#">🧬 Epidemiology</a></h2>
             <p class="card-desc">Health patterns and research frameworks.</p>
-            <ul class="mini-post-list" id="list-Epidemiology"><li class="empty-text">Loading posts...</li></ul>
-            <!-- 하위 링크 -->
+            <ul class="mini-post-list" id="list-Epidemiology"><li class="empty-text">Loading...</li></ul>
             <div class="sub-links">
                 <a href="list.html?label=Epidemiology Reference Study" class="sub-link">Reference</a>
                 <a href="list.html?label=Epidemiology Study Design" class="sub-link">Design</a>
             </div>
         </div>
         
-        <!-- 3. Medical Device -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=Medical">🏥 Medical Device</a></h2>
             <p class="card-desc">Strategic insights on RA/QA compliance.</p>
-            <ul class="mini-post-list" id="list-Medical"><li class="empty-text">Loading posts...</li></ul>
+            <ul class="mini-post-list" id="list-Medical"><li class="empty-text">Loading...</li></ul>
         </div>
         
-        <!-- 4. AI -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=AI">🤖 AI & Productivity</a></h2>
             <p class="card-desc">Enhancing workflows with AI tools.</p>
-            <ul class="mini-post-list" id="list-AI"><li class="empty-text">Loading posts...</li></ul>
+            <ul class="mini-post-list" id="list-AI"><li class="empty-text">Loading...</li></ul>
         </div>
         
-        <!-- 5. Travel -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=Travel">✈️ Travel Stories</a></h2>
             <p class="card-desc">Memories from global explorations.</p>
-            <ul class="mini-post-list" id="list-Travel"><li class="empty-text">Loading posts...</li></ul>
+            <ul class="mini-post-list" id="list-Travel"><li class="empty-text">Loading...</li></ul>
+        </div>
+
+        <!-- 6. 🌐 MDR Global News (새로 추가된 섹션) -->
+        <div class="card">
+            <h2 class="card-title" style="color: #e67e22;">🌐 Global MDR News</h2>
+            <p class="card-desc">Latest Medical Device Regulation news.</p>
+            <ul class="mini-post-list" id="list-MDR-News">
+                <li class="empty-text">Fetching news from Google...</li>
+            </ul>
         </div>
     </main>
 
@@ -100,76 +101,68 @@
         <a href="https://github.com/hyeonho4ko/hyeonho4ko.github.io/issues/new" class="btn-post" target="_blank">Write New Post</a>
     </footer>
 
-    <!-- 자바스크립트: 글 데이터를 가져와서 각 카드에 3개씩 분배 -->
     <script>
         const OWNER = 'hyeonho4ko';
         const REPO = 'hyeonho4ko.github.io';
         
+        // [1] 기존 GitHub 포스트 배포 로직
         async function distributeRecentPosts() {
             try {
-                // 전체 최신 글 30개를 한 번만 가져옵니다 (API 제한 방지)
                 const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&per_page=30`);
                 if (!response.ok) throw new Error('API Error');
                 const issues = await response.json();
+                const buckets = { 'English': [], 'Epidemiology': [], 'Medical': [], 'AI': [], 'Travel': [] };
 
-                // 각 카테고리별로 최대 3개씩 담을 저장소
-                const buckets = {
-                    'English': [], 'Epidemiology': [], 'Medical': [], 'AI': [], 'Travel': []
-                };
-
-                // 가져온 이슈들을 레이블에 맞게 분류
                 issues.forEach(issue => {
-                    if (issue.pull_request) return; // PR은 제외
-                    
-                    let added = new Set(); // 하나의 글이 같은 카드에 중복 추가되는 것 방지
-                    
+                    if (issue.pull_request) return;
+                    let added = new Set();
                     issue.labels.forEach(labelObj => {
                         const l = labelObj.name;
-                        
-                        if (l === 'English' && buckets['English'].length < 3 && !added.has('English')) {
-                            buckets['English'].push(issue); added.add('English');
-                        }
-                        // Epidemiology의 경우 두 하위 레이블 중 하나라도 포함되면 추가
-                        if ((l === 'Epidemiology Reference Study' || l === 'Epidemiology Study Design') && buckets['Epidemiology'].length < 3 && !added.has('Epi')) {
-                            buckets['Epidemiology'].push(issue); added.add('Epi');
-                        }
-                        if (l === 'Medical' && buckets['Medical'].length < 3 && !added.has('Medical')) {
-                            buckets['Medical'].push(issue); added.add('Medical');
-                        }
-                        if (l === 'AI' && buckets['AI'].length < 3 && !added.has('AI')) {
-                            buckets['AI'].push(issue); added.add('AI');
-                        }
-                        if (l === 'Travel' && buckets['Travel'].length < 3 && !added.has('Travel')) {
-                            buckets['Travel'].push(issue); added.add('Travel');
-                        }
+                        if (l === 'English' && buckets['English'].length < 3 && !added.has('En')) { buckets['English'].push(issue); added.add('En'); }
+                        if ((l === 'Epidemiology Reference Study' || l === 'Epidemiology Study Design') && buckets['Epidemiology'].length < 3 && !added.has('Epi')) { buckets['Epidemiology'].push(issue); added.add('Epi'); }
+                        if (l === 'Medical' && buckets['Medical'].length < 3 && !added.has('Med')) { buckets['Medical'].push(issue); added.add('Med'); }
+                        if (l === 'AI' && buckets['AI'].length < 3 && !added.has('AI')) { buckets['AI'].push(issue); added.add('AI'); }
+                        if (l === 'Travel' && buckets['Travel'].length < 3 && !added.has('Trv')) { buckets['Travel'].push(issue); added.add('Trv'); }
                     });
                 });
 
-                // 분류된 글들을 HTML에 삽입
-                Object.keys(buckets).forEach(category => {
-                    const container = document.getElementById(`list-${category}`);
-                    if (!container) return;
-
-                    if (buckets[category].length === 0) {
-                        container.innerHTML = '<li class="empty-text">아직 작성된 글이 없습니다.</li>';
-                        return;
-                    }
-
-                    let html = '';
-                    buckets[category].forEach(issue => {
-                        html += `<li class="mini-item"><a href="post.html?id=${issue.number}" title="${issue.title}">• ${issue.title}</a></li>`;
-                    });
-                    container.innerHTML = html;
+                Object.keys(buckets).forEach(cat => {
+                    const container = document.getElementById(`list-${cat}`);
+                    if (buckets[cat].length === 0) { container.innerHTML = '<li class="empty-text">No posts found.</li>'; return; }
+                    container.innerHTML = buckets[cat].map(issue => `<li class="mini-item"><a href="post.html?id=${issue.number}">• ${issue.title}</a></li>`).join('');
                 });
+            } catch (e) { console.error(e); }
+        }
 
-            } catch (error) {
-                document.querySelectorAll('.mini-post-list').forEach(el => {
-                    el.innerHTML = '<li class="empty-text" style="color:#d93025;">글을 불러오지 못했습니다.</li>';
-                });
+        // [2] 구글 뉴스 가져오기 로직 (RSS-to-JSON 활용)
+        async function fetchMDRNews() {
+            const newsContainer = document.getElementById('list-MDR-News');
+            // 구글 뉴스 RSS 피드 URL (의료기기 규제 키워드)
+            const rssUrl = encodeURIComponent('https://news.google.com/rss/search?q=medical+device+regulation+when:7d&hl=en-US&gl=US&ceid=US:en');
+            // RSS를 JSON으로 변환해주는 무료 API 서비스 사용
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.status === 'ok') {
+                    const items = data.items.slice(0, 5); // 최신 뉴스 5개만 추출
+                    newsContainer.innerHTML = items.map(item => `
+                        <li class="mini-item">
+                            <a href="${item.link}" target="_blank" title="${item.title}">🌐 ${item.title}</a>
+                        </li>
+                    `).join('');
+                } else {
+                    throw new Error('News fetch failed');
+                }
+            } catch (e) {
+                newsContainer.innerHTML = '<li class="empty-text">Failed to load news.</li>';
             }
         }
 
         distributeRecentPosts();
+        fetchMDRNews();
     </script>
 </body>
 </html>
