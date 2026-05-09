@@ -13,7 +13,8 @@
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; height: 300px; }
+        /* 카드 높이를 320px로 소폭 조정하여 more... 공간 확보 */
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; height: 320px; position: relative; }
         .card:hover { transform: translateY(-5px); border-color: #2980b9; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
         
         .card-title { margin-top: 0; font-size: 1.2rem; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; }
@@ -23,7 +24,6 @@
         
         .card-desc { font-size: 0.85rem; color: #7f8c8d; margin-top: 0; margin-bottom: 15px; }
         
-        /* Recent 목록 헤더 스타일 추가 */
         .list-label { font-size: 0.75rem; font-weight: bold; color: #bdc3c7; margin-bottom: 8px; display: flex; align-items: center; text-transform: uppercase; letter-spacing: 0.05em; }
         .list-label::before { content: "🕒"; margin-right: 5px; font-size: 0.8rem; }
 
@@ -31,6 +31,11 @@
         .mini-item { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; font-size: 0.9rem; }
         .mini-item a { text-decoration: none; color: #444; transition: color 0.2s; }
         .mini-item a:hover { color: #2980b9; text-decoration: underline; }
+        
+        /* more... 링크 스타일 */
+        .more-link { font-size: 0.8rem; color: #2980b9; text-decoration: none; font-weight: bold; display: none; margin-top: 5px; transition: 0.2s; }
+        .more-link:hover { text-decoration: underline; color: #1a252f; }
+
         .empty-text { font-size: 0.85rem; color: #aaa; font-style: italic; padding-top: 10px; text-align: center; }
         
         .sub-links { display: flex; gap: 8px; margin-top: 10px; border-top: 1px dashed #eee; padding-top: 10px; }
@@ -55,6 +60,7 @@
             <p class="card-desc">Journey to professional English fluency.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-English"><li class="empty-text">Loading...</li></ul>
+            <a href="list.html?label=English" id="more-English" class="more-link">more...</a>
         </div>
         
         <!-- 2. Epidemiology -->
@@ -66,6 +72,7 @@
             <p class="card-desc">Health patterns and research frameworks.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-Epidemiology"><li class="empty-text">Loading...</li></ul>
+            <!-- Epidemiology는 하위 버튼이 있으므로 별도의 more... 생략하거나 버튼과 연결 -->
             <div class="sub-links">
                 <a href="list.html?label=Epidemiology Reference Study" class="sub-link">Reference</a>
                 <a href="list.html?label=Epidemiology Study Design" class="sub-link">Design</a>
@@ -81,6 +88,7 @@
             <p class="card-desc">Strategic insights on RA/QA compliance.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-Medical"><li class="empty-text">Loading...</li></ul>
+            <a href="list.html?label=Medical" id="more-Medical" class="more-link">more...</a>
         </div>
         
         <!-- 4. AI -->
@@ -92,6 +100,7 @@
             <p class="card-desc">Enhancing workflows with AI tools.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-AI"><li class="empty-text">Loading...</li></ul>
+            <a href="list.html?label=AI" id="more-AI" class="more-link">more...</a>
         </div>
         
         <!-- 5. Travel -->
@@ -103,16 +112,16 @@
             <p class="card-desc">Memories from global explorations.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-Travel"><li class="empty-text">Loading...</li></ul>
+            <a href="list.html?label=Travel" id="more-Travel" class="more-link">more...</a>
         </div>
 
         <!-- 6. News -->
         <div class="card">
-            <h2 class="card-title" style="color: #d35400;">
-                📰 News
-            </h2>
+            <h2 class="card-title" style="color: #d35400;">📰 News</h2>
             <p class="card-desc">Latest Regulatory and Quality</p>
             <div class="list-label">World Wide News</div>
             <ul class="mini-post-list" id="list-RAQA-News"><li class="empty-text">Fetching news...</li></ul>
+            <!-- 뉴스는 구글 검색 결과이므로 별도의 more... 생략 또는 구글 뉴스 링크 -->
         </div>
     </main>
 
@@ -150,6 +159,13 @@
 
                 Object.keys(buckets).forEach(cat => {
                     document.getElementById(`count-${cat}`).innerText = counts[cat];
+                    
+                    // 글이 3개보다 많으면 more... 링크 노출
+                    const moreBtn = document.getElementById(`more-${cat}`);
+                    if (moreBtn && counts[cat] > 3) {
+                        moreBtn.style.display = 'inline-block';
+                    }
+
                     const container = document.getElementById(`list-${cat}`);
                     if (buckets[cat].length === 0) {
                         container.innerHTML = '<li class="empty-text">No posts found.</li>';
