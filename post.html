@@ -3,71 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post View</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>Post - Hyeonho's Archive</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; line-height: 1.7; }
-        
-        /* 상단 네비게이션 버튼들 */
-        .nav-bar { display: flex; gap: 10px; margin-bottom: 30px; }
-        .nav-btn { text-decoration: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
-        .btn-list { background: #2c3e50; color: white; }
-        .btn-home { background: #95a5a6; color: white; }
-        .nav-btn:hover { opacity: 0.8; transform: translateY(-2px); }
-        
-        article { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .post-meta { color: #999; font-size: 0.9rem; }
-        h1 { color: #2c3e50; font-size: 2.2rem; margin: 10px 0; }
-        #post-content { margin-top: 20px; }
-        #post-content img { max-width: 100%; border-radius: 8px; }
-        
-        /* 게시글 하단 댓글 섹션 */
-        #comments-wrapper { margin-top: 40px; background: white; padding: 30px; border-radius: 12px; border: 1px solid #eee; }
-        .comments-header { font-weight: bold; color: #2c3e50; text-align: center; margin-bottom: 20px; display: block; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; line-height: 1.8; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        .nav-buttons { display: flex; justify-content: space-between; margin-bottom: 30px; }
+        .btn-nav { text-decoration: none; color: #2980b9; font-weight: bold; }
+        article { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .post-title { color: #2c3e50; margin-top: 0; font-size: 2rem; }
+        .post-meta { font-size: 0.9rem; color: #7f8c8d; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .tag { display: inline-block; background: #ebf5fb; color: #2980b9; padding: 2px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="nav-bar">
-        <!-- 버튼 두 개 모두 배치 -->
-        <a href="javascript:history.back()" class="nav-btn btn-list">← Back to List</a>
-        <a href="index.html" class="nav-btn btn-home">🏠 Back to Dashboard</a>
+    <div class="nav-buttons">
+        <a href="index.html" class="btn-nav">← Home</a>
+        <a href="javascript:history.back()" class="btn-nav">Back to List</a>
     </div>
 
     <article>
-        <div id="post-meta" class="post-meta">Loading...</div>
-        <h1 id="post-title">Loading Post Title...</h1>
-        <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-        <div id="post-content">Fetching content...</div>
+        <h1 id="post-title" class="post-title">Post Title</h1>
+        <div class="post-meta">
+            <span id="post-date">Date</span> | <span id="post-category" class="tag">Category</span>
+        </div>
+        <div id="post-content">
+            <!-- 상세 본문 -->
+        </div>
     </article>
-
-    <div id="comments-wrapper">
-        <span class="comments-header">💬 Discussion & Feedback</span>
-        <script src="https://utteranc.es/client.js" 
-                repo="hyeonho4ko/hyeonho4ko.github.io" 
-                issue-term="pathname" 
-                theme="github-light" 
-                crossorigin="anonymous" 
-                async>
-        </script>
-    </div>
-
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('id');
-        const repo = "hyeonho4ko/hyeonho4ko.github.io";
-        if (postId) {
-            fetch(`https://api.github.com/repos/${repo}/issues/${postId}`)
-                .then(res => res.json())
-                .then(post => {
-                    document.getElementById('post-title').innerText = post.title;
-                    const date = new Date(post.created_at).toLocaleDateString();
-                    document.getElementById('post-meta').innerText = `Published on ${date}`;
-                    document.getElementById('post-content').innerHTML = marked.parse(post.body || "");
-                })
-                .catch(err => {
-                    document.getElementById('post-content').innerHTML = "Failed to load content.";
-                });
-        }
-    </script>
 </body>
 </html>
