@@ -11,10 +11,8 @@
         header h1 { margin: 0; font-size: 2.5rem; }
         header p { opacity: 0.8; font-weight: 300; margin-top: 10px; }
         
-        /* 그리드 설정: 총 6개의 카드가 배치됩니다 */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         
-        /* 카드 공통 스타일 */
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; height: 280px; }
         .card:hover { transform: translateY(-5px); border-color: #2980b9; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
         
@@ -22,7 +20,6 @@
         .card-title a { text-decoration: none; color: #2980b9; display: block; }
         .card-desc { font-size: 0.85rem; color: #7f8c8d; margin-top: 0; margin-bottom: 15px; }
         
-        /* 리스트 공통 스타일 */
         .mini-post-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; overflow: hidden; }
         .mini-item { 
             white-space: nowrap; 
@@ -35,7 +32,6 @@
         .mini-item a:hover { color: #2980b9; text-decoration: underline; }
         .empty-text { font-size: 0.85rem; color: #aaa; font-style: italic; padding-top: 10px; text-align: center; }
         
-        /* Epidemiology 전용 하위 링크 */
         .sub-links { display: flex; gap: 8px; margin-top: 10px; border-top: 1px dashed #eee; padding-top: 10px; }
         .sub-link { flex: 1; text-align: center; padding: 6px; background: #ebf5fb; color: #2980b9; text-decoration: none; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
         
@@ -52,7 +48,7 @@
     </header>
     
     <main class="grid">
-        <!-- 1~5번 섹션 (기존과 동일) -->
+        <!-- 1~5번 섹션 (생략 없이 유지) -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=English">📚 English Study</a></h2>
             <p class="card-desc">Journey to professional English fluency.</p>
@@ -87,10 +83,10 @@
             <ul class="mini-post-list" id="list-Travel"><li class="empty-text">Loading...</li></ul>
         </div>
 
-        <!-- 6. 📰 News in Regulatory and Quality (4개국 한정 검색) -->
+        <!-- 6. 📰 News (제목 및 설명 수정 완료) -->
         <div class="card">
-            <h2 class="card-title" style="color: #d35400;">📰 News in Regulatory & Quality</h2>
-            <p class="card-desc">Latest RA/QA news: USA, UK, Korea, Germany.</p>
+            <h2 class="card-title" style="color: #d35400;">📰 News</h2>
+            <p class="card-desc">Latest Regulatory and Quality</p>
             <ul class="mini-post-list" id="list-RAQA-News">
                 <li class="empty-text">Fetching news from Google...</li>
             </ul>
@@ -105,7 +101,6 @@
         const OWNER = 'hyeonho4ko';
         const REPO = 'hyeonho4ko.github.io';
         
-        // [1] GitHub 포스트 분배 로직
         async function distributeRecentPosts() {
             try {
                 const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&per_page=30`);
@@ -133,12 +128,8 @@
             } catch (e) { console.error(e); }
         }
 
-        // [2] 4개국 한정 구글 뉴스 가져오기 로직
         async function fetchRAQANews() {
             const newsContainer = document.getElementById('list-RAQA-News');
-            
-            // 검색 키워드: 미국, 영국, 한국, 독일 한정 (OR 검색 활용)
-            // 키워드: medical device regulatory quality (USA OR UK OR Korea OR Germany)
             const query = encodeURIComponent('medical device regulatory quality (USA OR UK OR Korea OR Germany) when:14d');
             const rssUrl = `https://news.google.com/rss/search?q=${query}&hl=en-US&gl=US&ceid=US:en`;
             const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
@@ -146,14 +137,9 @@
             try {
                 const response = await fetch(apiUrl);
                 const data = await response.json();
-
                 if (data.status === 'ok') {
                     const items = data.items.slice(0, 5); 
-                    newsContainer.innerHTML = items.map(item => `
-                        <li class="mini-item">
-                            <a href="${item.link}" target="_blank" title="${item.title}">📰 ${item.title}</a>
-                        </li>
-                    `).join('');
+                    newsContainer.innerHTML = items.map(item => `<li class="mini-item"><a href="${item.link}" target="_blank" title="${item.title}">📰 ${item.title}</a></li>`).join('');
                 } else {
                     throw new Error('News fetch failed');
                 }
