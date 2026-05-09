@@ -16,18 +16,9 @@
         .meta { color: #7f8c8d; font-size: 0.9rem; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
         #content img { max-width: 100%; border-radius: 8px; }
         
-        /* 댓글 섹션 스타일 */
+        /* 댓글 영역 스타일 */
         .comments-section { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .comments-header { font-size: 1.4rem; color: #2c3e50; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; margin-top: 0; margin-bottom: 20px; }
-        .comment-item { border-bottom: 1px solid #eee; padding: 20px 0; }
-        .comment-item:last-child { border-bottom: none; }
-        .comment-author { font-weight: bold; color: #2980b9; margin-right: 10px; }
-        .comment-date { font-size: 0.85rem; color: #7f8c8d; }
-        .comment-body { margin-top: 10px; font-size: 0.95rem; }
-        
-        /* 댓글 달기 버튼 */
-        .btn-comment { display: block; text-align: center; margin-top: 30px; padding: 15px; background: #2c3e50; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; transition: background 0.3s; }
-        .btn-comment:hover { background: #1a252f; }
     </style>
 </head>
 <body>
@@ -43,14 +34,12 @@
         <div id="content"></div>
     </article>
 
-    <!-- 댓글 영역 -->
+    <!-- 댓글 창이 생성될 영역 -->
     <div class="comments-section">
-        <h3 class="comments-header">Comments (<span id="comment-count">0</span>)</h3>
-        <div id="comments-list">
-            <p style="color:#7f8c8d; text-align:center;">댓글을 불러오는 중입니다...</p>
+        <h3 class="comments-header">Comments</h3>
+        <div id="utterances-container">
+            <!-- 자바스크립트를 통해 여기에 댓글창이 생성됩니다 -->
         </div>
-        <!-- GitHub 해당 이슈의 댓글창으로 바로 연결되는 버튼 -->
-        <a id="btn-write-comment" href="#" target="_blank" class="btn-comment" style="display:none;">GitHub에서 댓글 작성하기</a>
     </div>
 
     <script>
@@ -67,44 +56,31 @@
 
                 document.title = issue.title;
                 document.getElementById('post-title').innerText = issue.title;
-                document.getElementById('post-meta').innerText = `Posted on ${new Date(issue.created_at).toLocaleDateString()} | Comments: ${issue.comments}`;
+                document.getElementById('post-meta').innerText = `Posted on ${new Date(issue.created_at).toLocaleDateString()}`;
                 document.getElementById('content').innerHTML = marked.parse(issue.body || "내용이 없습니다.");
 
-                // 2. 댓글 설정
-                document.getElementById('comment-count').innerText = issue.comments;
-                
-                const btnWrite = document.getElementById('btn-write-comment');
-                btnWrite.href = issue.html_url + "#issue-comment-box"; // GitHub 댓글 입력창으로 바로가기 앵커
-                btnWrite.style.display = 'block';
-
-                const commentsList = document.getElementById('comments-list');
-                
-                // 3. 댓글이 있는 경우 댓글 내용 가져오기
-                if (issue.comments > 0) {
-                    const commentsRes = await fetch(issue.comments_url);
-                    const commentsData = await commentsRes.json();
-                    
-                    commentsList.innerHTML = ''; // 로딩 문구 삭제
-                    
-                    commentsData.forEach(comment => {
-                        commentsList.innerHTML += `
-                            <div class="comment-item">
-                                <div>
-                                    <span class="comment-author">@${comment.user.login}</span>
-                                    <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
-                                </div>
-                                <div class="comment-body">${marked.parse(comment.body)}</div>
-                            </div>
-                        `;
-                    });
-                } else {
-                    commentsList.innerHTML = '<p style="color:#7f8c8d; text-align:center;">아직 작성된 댓글이 없습니다. 첫 번째 댓글을 남겨보세요!</p>';
-                }
+                // 2. 현재 글(Issue)에 해당하는 Utterances 댓글창 생성
+                loadUtterances(id);
 
             } catch (e) {
                 document.getElementById('content').innerText = "글을 불러올 수 없습니다.";
-                document.getElementById('comments-list').innerHTML = "댓글을 불러올 수 없습니다.";
             }
+        }
+
+        function loadUtterances(issueNumber) {
+            const container = document.getElementById('utterances-container');
+            
+            // Utterances 스크립트 태그 동적 생성
+            const script = document.createElement('script');
+            script.src = "https://utteranc.es/client.js";
+            script.setAttribute("repo", `${OWNER}/${REPO}`);
+            script.setAttribute("issue-number", issueNumber); // 현재 표시중인 이슈 번호와 연결
+            script.setAttribute("theme", "github-light"); // 테마 설정
+            script.setAttribute("crossorigin", "anonymous");
+            script.async = true;
+
+            // 컨테이너에 스크립트 추가 (자동으로 댓글창 iframe 생성됨)
+            container.appendChild(script);
         }
 
         if (id) loadPost();
