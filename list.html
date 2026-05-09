@@ -3,168 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post List - Hyeonho's Archive</title>
+    <title>Post List</title>
     <style>
-        /* 메인 디자인 시스템 계승 */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            line-height: 1.6; 
-            color: #333; 
-            max-width: 1000px; 
-            margin: 0 auto; 
-            padding: 20px; 
-            background-color: #f4f7f6; 
-        }
-
-        /* 상단 네비게이션 */
-        .nav-header {
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-        }
-        .back-link { 
-            text-decoration: none; 
-            color: #2c3e50; 
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            transition: color 0.3s;
-        }
-        .back-link:hover { color: #2980b9; }
-
-        /* 카테고리 타이틀 */
-        h1 { 
-            color: #2c3e50; 
-            font-size: 2rem;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #2980b9; 
-        }
-
-        /* 게시글 아이템 스타일 */
-        .post-item { 
-            background: white; 
-            padding: 25px; 
-            border-radius: 12px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
-            transition: all 0.3s ease; 
-            display: block; 
-            text-decoration: none; 
-            color: inherit; 
-            border: 1px solid #eee;
-        }
-        .post-item:hover { 
-            transform: translateX(10px); 
-            border-color: #2980b9;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
-        .post-title { 
-            font-size: 1.3rem; 
-            font-weight: bold; 
-            color: #2980b9; 
-            margin-bottom: 8px; 
-        }
-        .post-date { 
-            font-size: 0.85rem; 
-            color: #999; 
-            display: flex;
-            align-items: center;
-        }
-
-        /* 댓글 섹션 스타일 */
-        #comments-container {
-            margin-top: 80px;
-            padding-top: 40px;
-            border-top: 1px solid #ddd;
-        }
-        .comments-header {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            font-weight: bold;
-        }
-
-        /* 로딩 애니메이션 및 안내 */
-        .loading { text-align: center; color: #666; padding: 40px; }
+        body { font-family: 'Segoe UI', sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        .nav-header { margin-bottom: 30px; }
+        .back-link { text-decoration: none; color: #2c3e50; font-weight: bold; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #2980b9; padding-bottom: 10px; }
+        .post-item { background: white; padding: 25px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.3s; display: block; text-decoration: none; color: inherit; border: 1px solid #eee; }
+        .post-item:hover { transform: translateX(10px); border-color: #2980b9; }
+        .post-title { font-size: 1.2rem; font-weight: bold; color: #2980b9; }
+        .post-date { font-size: 0.8rem; color: #999; margin-top: 5px; }
+        #comments-container { margin-top: 60px; padding: 20px; background: white; border-radius: 12px; }
     </style>
 </head>
 <body>
+    <div class="nav-header"><a href="index.html" class="back-link">← Back to Dashboard</a></div>
+    <h1 id="category-name">Loading Articles...</h1>
+    <div id="post-list"></div>
 
-    <nav class="nav-header">
-        <a href="index.html" class="back-link">← Back to Dashboard</a>
-    </nav>
-
-    <h1 id="category-name">Loading...</h1>
-
-    <div id="post-list">
-        <p class="loading">Fetching articles from GitHub...</p>
-    </div>
-
-    <!-- 각 게시글 리스트 페이지 하단에 위치할 독립 댓글창 -->
     <div id="comments-container">
-        <div class="comments-header">💬 Discussion about this category</div>
-        <!-- Utterances 스크립트 -->
-        <script src="https://utteranc.es/client.js"
-                repo="hyeonho4ko/hyeonho4ko.github.io"
-                issue-term="pathname"
-                theme="github-light"
-                crossorigin="anonymous"
-                async>
-        </script>
+        <h3 style="text-align:center;">💬 Category Discussion</h3>
+        <script src="https://utteranc.es/client.js" repo="hyeonho4ko/hyeonho4ko.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async></script>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const label = urlParams.get('label');
         const repo = "hyeonho4ko/hyeonho4ko.github.io";
-
-        // 카테고리 이름 업데이트
         if (label) {
-            document.getElementById('category-name').innerText = "Category: " + label;
-            document.title = `${label} - Hyeonho's Archive`;
-
-            // GitHub API 호출
-            fetch(`https://api.github.com/repos/${repo}/issues?labels=${label}&state=open`)
-                .then(res => {
-                    if (!res.ok) throw new Error('Network response was not ok');
-                    return res.json();
-                })
+            document.getElementById('category-name').innerText = label + " Articles";
+            fetch(`https://api.github.com/repos/${repo}/issues?labels=${label}`)
+                .then(res => res.json())
                 .then(posts => {
                     const listDiv = document.getElementById('post-list');
-                    listDiv.innerHTML = ""; // 로딩 문구 제거
-
-                    if (posts.length === 0) {
-                        listDiv.innerHTML = "<p style='text-align:center; padding: 50px; color: #999;'>No articles found in this category yet.</p>";
-                        return;
-                    }
-
+                    listDiv.innerHTML = posts.length === 0 ? "<p>No articles yet.</p>" : "";
                     posts.forEach(post => {
-                        // pull_request는 제외하고 순수 Issue(게시글)만 필터링
                         if (!post.pull_request) {
-                            const date = new Date(post.created_at).toLocaleDateString('en-US', {
-                                year: 'numeric', month: 'long', day: 'numeric'
-                            });
-                            
+                            const date = new Date(post.created_at).toLocaleDateString();
                             const item = document.createElement('a');
                             item.className = 'post-item';
-                            // 개별 게시글을 보여줄 post.html로 이동 (id 파라미터 전달)
                             item.href = `post.html?id=${post.number}`;
-                            item.innerHTML = `
-                                <div class="post-title">${post.title}</div>
-                                <div class="post-date">📅 Published on ${date}</div>
-                            `;
+                            item.innerHTML = `<div class="post-title">${post.title}</div><div class="post-date">Published on ${date}</div>`;
                             listDiv.appendChild(item);
                         }
                     });
-                })
-                .catch(err => {
-                    console.error(err);
-                    document.getElementById('post-list').innerHTML = "<p>Error loading posts. Please check your GitHub repository settings.</p>";
                 });
-        } else {
-            document.getElementById('category-name').innerText = "No Category Selected";
-            document.getElementById('post-list').innerHTML = "<a href='index.html'>Go back to Home</a>";
         }
     </script>
 </body>
