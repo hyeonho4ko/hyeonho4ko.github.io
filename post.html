@@ -7,10 +7,13 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         body { font-family: 'Segoe UI', sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; line-height: 1.7; }
-        .nav-bar { display: flex; justify-content: space-between; margin-bottom: 30px; }
-        /* 목록으로 돌아가기 버튼 스타일 */
-        .back-btn { text-decoration: none; color: white; background: #2c3e50; padding: 10px 20px; border-radius: 25px; font-weight: bold; transition: 0.3s; }
-        .back-btn:hover { background: #2980b9; transform: translateX(-5px); }
+        
+        /* 상단 네비게이션 버튼들 */
+        .nav-bar { display: flex; gap: 10px; margin-bottom: 30px; }
+        .nav-btn { text-decoration: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .btn-list { background: #2c3e50; color: white; }
+        .btn-home { background: #95a5a6; color: white; }
+        .nav-btn:hover { opacity: 0.8; transform: translateY(-2px); }
         
         article { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .post-meta { color: #999; font-size: 0.9rem; }
@@ -18,16 +21,16 @@
         #post-content { margin-top: 20px; }
         #post-content img { max-width: 100%; border-radius: 8px; }
         
-        /* 게시글 전용 댓글 섹션 */
+        /* 게시글 하단 댓글 섹션 */
         #comments-wrapper { margin-top: 40px; background: white; padding: 30px; border-radius: 12px; border: 1px solid #eee; }
         .comments-header { font-weight: bold; color: #2c3e50; text-align: center; margin-bottom: 20px; display: block; }
     </style>
 </head>
 <body>
     <div class="nav-bar">
-        <!-- 목록으로 돌아가기 버튼 복구 -->
-        <a href="javascript:history.back()" class="back-btn">← Back to List</a>
-        <a href="index.html" style="text-decoration:none; color:#666; font-weight:bold;">Home</a>
+        <!-- 버튼 두 개 모두 배치 -->
+        <a href="javascript:history.back()" class="nav-btn btn-list">← Back to List</a>
+        <a href="index.html" class="nav-btn btn-home">🏠 Back to Dashboard</a>
     </div>
 
     <article>
@@ -37,7 +40,6 @@
         <div id="post-content">Fetching content...</div>
     </article>
 
-    <!-- 독자가 글을 다 읽고 소통하는 공간 -->
     <div id="comments-wrapper">
         <span class="comments-header">💬 Discussion & Feedback</span>
         <script src="https://utteranc.es/client.js" 
@@ -60,7 +62,6 @@
                     document.getElementById('post-title').innerText = post.title;
                     const date = new Date(post.created_at).toLocaleDateString();
                     document.getElementById('post-meta').innerText = `Published on ${date}`;
-                    // 마크다운 렌더링
                     document.getElementById('post-content').innerHTML = marked.parse(post.body || "");
                 })
                 .catch(err => {
