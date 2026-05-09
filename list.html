@@ -7,24 +7,18 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
         .nav-header { margin-bottom: 30px; }
-        .back-link { text-decoration: none; color: #2c3e50; font-weight: bold; }
-        h1 { color: #2c3e50; border-bottom: 3px solid #2980b9; padding-bottom: 10px; }
+        .back-link { text-decoration: none; color: #2c3e50; font-weight: bold; background: #ddd; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #2980b9; padding-bottom: 10px; margin-top: 20px; }
         .post-item { background: white; padding: 25px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.3s; display: block; text-decoration: none; color: inherit; border: 1px solid #eee; }
         .post-item:hover { transform: translateX(10px); border-color: #2980b9; }
         .post-title { font-size: 1.2rem; font-weight: bold; color: #2980b9; }
         .post-date { font-size: 0.8rem; color: #999; margin-top: 5px; }
-        #comments-container { margin-top: 60px; padding: 20px; background: white; border-radius: 12px; }
     </style>
 </head>
 <body>
-    <div class="nav-header"><a href="index.html" class="back-link">← Back to Dashboard</a></div>
+    <div class="nav-header"><a href="index.html" class="back-link">← Home</a></div>
     <h1 id="category-name">Loading Articles...</h1>
     <div id="post-list"></div>
-
-    <div id="comments-container">
-        <h3 style="text-align:center;">💬 Category Discussion</h3>
-        <script src="https://utteranc.es/client.js" repo="hyeonho4ko/hyeonho4ko.github.io" issue-term="pathname" theme="github-light" crossorigin="anonymous" async></script>
-    </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -32,7 +26,7 @@
         const repo = "hyeonho4ko/hyeonho4ko.github.io";
         if (label) {
             document.getElementById('category-name').innerText = label + " Articles";
-            fetch(`https://api.github.com/repos/${repo}/issues?labels=${label}`)
+            fetch(`https://api.github.com/repos/${repo}/issues?labels=${label}&state=open`)
                 .then(res => res.json())
                 .then(posts => {
                     const listDiv = document.getElementById('post-list');
