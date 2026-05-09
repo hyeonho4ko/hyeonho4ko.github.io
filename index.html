@@ -13,17 +13,20 @@
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; height: 280px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; height: 300px; }
         .card:hover { transform: translateY(-5px); border-color: #2980b9; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
         
         .card-title { margin-top: 0; font-size: 1.2rem; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; }
         .card-title a { text-decoration: none; color: #2980b9; flex-grow: 1; font-weight: bold; }
         
-        /* 세련된 아티클 카운트 뱃지 */
         .post-count { font-size: 0.7rem; color: #95a5a6; border: 1px solid #d5dbdb; padding: 2px 8px; border-radius: 4px; font-weight: 500; margin-left: 10px; letter-spacing: 0.05em; text-transform: uppercase; }
         
         .card-desc { font-size: 0.85rem; color: #7f8c8d; margin-top: 0; margin-bottom: 15px; }
         
+        /* Recent 목록 헤더 스타일 추가 */
+        .list-label { font-size: 0.75rem; font-weight: bold; color: #bdc3c7; margin-bottom: 8px; display: flex; align-items: center; text-transform: uppercase; letter-spacing: 0.05em; }
+        .list-label::before { content: "🕒"; margin-right: 5px; font-size: 0.8rem; }
+
         .mini-post-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; overflow: hidden; }
         .mini-item { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; font-size: 0.9rem; }
         .mini-item a { text-decoration: none; color: #444; transition: color 0.2s; }
@@ -32,9 +35,6 @@
         
         .sub-links { display: flex; gap: 8px; margin-top: 10px; border-top: 1px dashed #eee; padding-top: 10px; }
         .sub-link { flex: 1; text-align: center; padding: 6px; background: #ebf5fb; color: #2980b9; text-decoration: none; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
-        
-        .admin-footer { text-align: center; margin-top: 60px; padding-top: 30px; border-top: 1px solid #ddd; }
-        .btn-post { display: inline-block; padding: 12px 30px; background: #27ae60; color: white; text-decoration: none; border-radius: 30px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -53,6 +53,7 @@
                 <span class="post-count"><span id="count-English">0</span> Articles</span>
             </h2>
             <p class="card-desc">Journey to professional English fluency.</p>
+            <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-English"><li class="empty-text">Loading...</li></ul>
         </div>
         
@@ -63,6 +64,7 @@
                 <span class="post-count"><span id="count-Epidemiology">0</span> Articles</span>
             </h2>
             <p class="card-desc">Health patterns and research frameworks.</p>
+            <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-Epidemiology"><li class="empty-text">Loading...</li></ul>
             <div class="sub-links">
                 <a href="list.html?label=Epidemiology Reference Study" class="sub-link">Reference</a>
@@ -77,6 +79,7 @@
                 <span class="post-count"><span id="count-Medical">0</span> Articles</span>
             </h2>
             <p class="card-desc">Strategic insights on RA/QA compliance.</p>
+            <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-Medical"><li class="empty-text">Loading...</li></ul>
         </div>
         
@@ -87,6 +90,7 @@
                 <span class="post-count"><span id="count-AI">0</span> Articles</span>
             </h2>
             <p class="card-desc">Enhancing workflows with AI tools.</p>
+            <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-AI"><li class="empty-text">Loading...</li></ul>
         </div>
         
@@ -97,15 +101,17 @@
                 <span class="post-count"><span id="count-Travel">0</span> Articles</span>
             </h2>
             <p class="card-desc">Memories from global explorations.</p>
+            <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-Travel"><li class="empty-text">Loading...</li></ul>
         </div>
 
-        <!-- 6. News (카운트 제외) -->
+        <!-- 6. News -->
         <div class="card">
             <h2 class="card-title" style="color: #d35400;">
                 📰 News
             </h2>
             <p class="card-desc">Latest Regulatory and Quality</p>
+            <div class="list-label">World Wide News</div>
             <ul class="mini-post-list" id="list-RAQA-News"><li class="empty-text">Fetching news...</li></ul>
         </div>
     </main>
@@ -123,13 +129,11 @@
                 const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&per_page=100`);
                 if (!response.ok) throw new Error('API Error');
                 const issues = await response.json();
-
                 const buckets = { 'English': [], 'Epidemiology': [], 'Medical': [], 'AI': [], 'Travel': [] };
                 const counts = { 'English': 0, 'Epidemiology': 0, 'Medical': 0, 'AI': 0, 'Travel': 0 };
 
                 issues.forEach(issue => {
                     if (issue.pull_request) return;
-                    
                     let isEpi = false;
                     issue.labels.forEach(labelObj => {
                         const l = labelObj.name;
@@ -150,9 +154,7 @@
                     if (buckets[cat].length === 0) {
                         container.innerHTML = '<li class="empty-text">No posts found.</li>';
                     } else {
-                        container.innerHTML = buckets[cat].map(issue => 
-                            `<li class="mini-item"><a href="post.html?id=${issue.number}">• ${issue.title}</a></li>`
-                        ).join('');
+                        container.innerHTML = buckets[cat].map(issue => `<li class="mini-item"><a href="post.html?id=${issue.number}">• ${issue.title}</a></li>`).join('');
                     }
                 });
             } catch (e) { console.error(e); }
@@ -167,9 +169,7 @@
                 const response = await fetch(apiUrl);
                 const data = await response.json();
                 if (data.status === 'ok') {
-                    newsContainer.innerHTML = data.items.slice(0, 5).map(item => 
-                        `<li class="mini-item"><a href="${item.link}" target="_blank">📰 ${item.title}</a></li>`
-                    ).join('');
+                    newsContainer.innerHTML = data.items.slice(0, 5).map(item => `<li class="mini-item"><a href="${item.link}" target="_blank">📰 ${item.title}</a></li>`).join('');
                 }
             } catch (e) { newsContainer.innerHTML = '<li class="empty-text">Failed to load news.</li>'; }
         }
