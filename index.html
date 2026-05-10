@@ -36,6 +36,7 @@
 
         .empty-text { font-size: 0.85rem; color: #aaa; font-style: italic; padding-top: 10px; text-align: center; }
         
+        /* Updated Footer to push Admin button to the right */
         .admin-footer { display: flex; justify-content: flex-end; margin-top: 40px; padding: 20px 0; border-top: 1px solid #eee; }
         .btn-admin { padding: 8px 16px; background: #2c3e50; color: white; text-decoration: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
         .btn-admin:hover { background: #34495e; }
@@ -119,7 +120,6 @@
                 if (!response.ok) throw new Error('API Error');
                 const issues = await response.json();
                 
-                // Define buckets and counts
                 const buckets = { 'English': [], 'EpiRef': [], 'EpiDesign': [], 'Medical': [], 'AI': [], 'Travel': [] };
                 const counts = { 'English': 0, 'EpiRef': 0, 'EpiDesign': 0, 'Medical': 0, 'AI': 0, 'Travel': 0 };
 
@@ -139,7 +139,11 @@
                 Object.keys(buckets).forEach(cat => {
                     document.getElementById(`count-${cat}`).innerText = counts[cat];
                     const moreBtn = document.getElementById(`more-${cat}`);
-                    if (moreBtn && counts[cat] > 3) moreBtn.style.display = 'inline-block';
+                    
+                    // Show 'more...' link if there are more than 3 posts
+                    if (moreBtn && counts[cat] > 3) {
+                        moreBtn.style.display = 'inline-block';
+                    }
 
                     const container = document.getElementById(`list-${cat}`);
                     if (buckets[cat].length === 0) {
