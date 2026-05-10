@@ -104,13 +104,13 @@
             <a href="list.html?label=Travel" id="more-Travel" class="more-link">more...</a>
         </div>
 
-        <!-- 6. Latest News (Restored) -->
+        <!-- 6. Latest News (Now with Enhanced 2026 Keywords) -->
         <div class="card">
             <h2 class="card-title" style="color: #d35400;">📰 Latest News</h2>
             <p class="card-desc">Global RA/QA & AI Regulation</p>
             <div class="list-label">World Wide Updates</div>
             <ul class="mini-post-list" id="list-News"><li class="empty-text">Fetching news...</li></ul>
-            <a href="https://news.google.com/search?q=medical+device+regulatory+AI" target="_blank" class="more-link" style="display: inline-block;">more...</a>
+            <a href="https://news.google.com/search?q=%22Medical+Device%22+%28Regulatory+OR+Quality+OR+AI+OR+PCCP%29+%28FDA+OR+MDR+OR+MFDS+OR+MHRA%29" target="_blank" class="more-link" style="display: inline-block;">more...</a>
         </div>
     </main>
 
@@ -161,8 +161,15 @@
 
         async function fetchMedicalNews() {
             const newsContainer = document.getElementById('list-News');
-            // Query: Medical Device + Regulatory/Quality/AI across USA, UK, Korea, Germany
-            const query = encodeURIComponent('"Medical Device" (Regulatory OR Quality OR AI) (USA OR UK OR Korea OR Germany) when:7d');
+            
+            /* 
+               Optimized Search Query for 2026:
+               Targeting: "Medical Device" + (FDA QMSR, EU AI Act, MHRA, MFDS)
+               Focusing on: Regulatory updates, AI software (SaMD), and PCCP protocols.
+            */
+            const keywords = '"Medical Device" (Regulatory OR Quality OR AI OR "EU AI Act" OR QMSR OR PCCP OR SaMD) (USA OR UK OR Korea OR Germany OR FDA OR MHRA OR MFDS OR EMA) when:7d';
+            const query = encodeURIComponent(keywords);
+            
             const rssUrl = `https://news.google.com/rss/search?q=${query}&hl=en-US&gl=US&ceid=US:en`;
             const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
             
@@ -170,12 +177,13 @@
                 const response = await fetch(apiUrl);
                 const data = await response.json();
                 if (data.status === 'ok') {
+                    // Limiting to 5 items to fit nicely in the card
                     newsContainer.innerHTML = data.items.slice(0, 5).map(item => 
                         `<li class="mini-item"><a href="${item.link}" target="_blank">📰 ${item.title}</a></li>`
                     ).join('');
                 }
             } catch (e) { 
-                newsContainer.innerHTML = '<li class="empty-text">Failed to load news.</li>'; 
+                newsContainer.innerHTML = '<li class="empty-text">Failed to load current regulatory news.</li>'; 
             }
         }
 
