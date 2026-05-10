@@ -86,7 +86,7 @@
             <a href="list.html?label=Medical" id="more-Medical" class="more-link">more...</a>
         </div>
         
-        <!-- 4. AI -->
+        <!-- 4. AI Tool -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=AI">🤖 AI & Productivity</a><span class="post-count"><span id="count-AI">0</span> Articles</span></h2>
             <p class="card-desc">Enhancing workflows with AI tools.</p>
@@ -104,7 +104,7 @@
             <a href="list.html?label=Travel" id="more-Travel" class="more-link">more...</a>
         </div>
 
-        <!-- 6. Latest News (Now with Enhanced 2026 Keywords) -->
+        <!-- 6. Latest News -->
         <div class="card">
             <h2 class="card-title" style="color: #d35400;">📰 Latest News</h2>
             <p class="card-desc">Global RA/QA & AI Regulation</p>
@@ -124,6 +124,7 @@
         
         async function distributeRecentPosts() {
             try {
+                // 특정 라벨을 지정하지 않고 전체 100개를 가져와서 로컬에서 분류합니다.
                 const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&per_page=100`);
                 if (!response.ok) throw new Error('API Error');
                 const issues = await response.json();
@@ -133,15 +134,37 @@
 
                 issues.forEach(issue => {
                     if (issue.pull_request) return;
-                    issue.labels.forEach(labelObj => {
-                        const l = labelObj.name;
-                        if (l === 'English') { counts['English']++; if(buckets['English'].length < 3) buckets['English'].push(issue); }
-                        if (l === 'Epidemiology Reference Study') { counts['EpiRef']++; if(buckets['EpiRef'].length < 3) buckets['EpiRef'].push(issue); }
-                        if (l === 'Epidemiology Study Design') { counts['EpiDesign']++; if(buckets['EpiDesign'].length < 3) buckets['EpiDesign'].push(issue); }
-                        if (l === 'Medical') { counts['Medical']++; if(buckets['Medical'].length < 3) buckets['Medical'].push(issue); }
-                        if (l === 'AI') { counts['AI']++; if(buckets['AI'].length < 3) buckets['AI'].push(issue); }
-                        if (l === 'Travel') { counts['Travel']++; if(buckets['Travel'].length < 3) buckets['Travel'].push(issue); }
-                    });
+
+                    // 해당 이슈가 가진 모든 라벨을 확인하여 각각의 버킷에 배분합니다.
+                    // (if - else if 가 아닌 개별 if 문을 사용하여 한 이슈가 여러 카드에 들어갈 수 있게 함)
+                    const labelNames = issue.labels.map(l => l.name);
+
+                    if (labelNames.includes('English')) { 
+                        counts['English']++; 
+                        if(buckets['English'].length < 3) buckets['English'].push(issue); 
+                    }
+                    if (labelNames.includes('Epidemiology Reference Study')) { 
+                        counts['EpiRef']++; 
+                        if(buckets['EpiRef'].length < 3) buckets['EpiRef'].push(issue); 
+                    }
+                    if (labelNames.includes('Epidemiology Study Design')) { 
+                        counts['EpiDesign']++; 
+                        if(buckets['EpiDesign'].length < 3) buckets['EpiDesign'].push(issue); 
+                    }
+                    // 'Medical' 또는 'Medical Device' 라벨 대응
+                    if (labelNames.includes('Medical') || labelNames.includes('Medical Device')) { 
+                        counts['Medical']++; 
+                        if(buckets['Medical'].length < 3) buckets['Medical'].push(issue); 
+                    }
+                    // 'AI' 또는 'AITool' 라벨 대응
+                    if (labelNames.includes('AI') || labelNames.includes('AITool')) { 
+                        counts['AI']++; 
+                        if(buckets['AI'].length < 3) buckets['AI'].push(issue); 
+                    }
+                    if (labelNames.includes('Travel')) { 
+                        counts['Travel']++; 
+                        if(buckets['Travel'].length < 3) buckets['Travel'].push(issue); 
+                    }
                 });
 
                 Object.keys(buckets).forEach(cat => {
@@ -153,7 +176,10 @@
                     if (buckets[cat].length === 0) {
                         container.innerHTML = '<li class="empty-text">No posts found.</li>';
                     } else {
-                        container.innerHTML = buckets[cat].map(issue => `<li class="mini-item"><a href="post.html?id=${issue.number}">• ${issue.title}</a></li>`).join('');
+                        // post.html?id=... 로 연결되도록 유지
+                        container.innerHTML = buckets[cat].map(issue => 
+                            `<li class="mini-item"><a href="post.html?id=${issue.number}">• ${issue.title}</a></li>`
+                        ).join('');
                     }
                 });
             } catch (e) { console.error(e); }
@@ -161,15 +187,8 @@
 
         async function fetchMedicalNews() {
             const newsContainer = document.getElementById('list-News');
-            
-            /* 
-               Optimized Search Query for 2026:
-               Targeting: "Medical Device" + (FDA QMSR, EU AI Act, MHRA, MFDS)
-               Focusing on: Regulatory updates, AI software (SaMD), and PCCP protocols.
-            */
             const keywords = '"Medical Device" (Regulatory OR Quality OR AI OR "EU AI Act" OR QMSR OR PCCP OR SaMD) (USA OR UK OR Korea OR Germany OR FDA OR MHRA OR MFDS OR EMA) when:7d';
             const query = encodeURIComponent(keywords);
-            
             const rssUrl = `https://news.google.com/rss/search?q=${query}&hl=en-US&gl=US&ceid=US:en`;
             const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
             
@@ -177,7 +196,6 @@
                 const response = await fetch(apiUrl);
                 const data = await response.json();
                 if (data.status === 'ok') {
-                    // Limiting to 5 items to fit nicely in the card
                     newsContainer.innerHTML = data.items.slice(0, 5).map(item => 
                         `<li class="mini-item"><a href="${item.link}" target="_blank">📰 ${item.title}</a></li>`
                     ).join('');
