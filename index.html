@@ -13,7 +13,6 @@
         
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         
-        /* 카드 높이를 320px로 소폭 조정하여 more... 공간 확보 */
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; height: 320px; position: relative; }
         .card:hover { transform: translateY(-5px); border-color: #2980b9; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
         
@@ -32,7 +31,6 @@
         .mini-item a { text-decoration: none; color: #444; transition: color 0.2s; }
         .mini-item a:hover { color: #2980b9; text-decoration: underline; }
         
-        /* more... 링크 스타일 */
         .more-link { font-size: 0.8rem; color: #2980b9; text-decoration: none; font-weight: bold; display: none; margin-top: 5px; transition: 0.2s; }
         .more-link:hover { text-decoration: underline; color: #1a252f; }
 
@@ -40,6 +38,26 @@
         
         .sub-links { display: flex; gap: 8px; margin-top: 10px; border-top: 1px dashed #eee; padding-top: 10px; }
         .sub-link { flex: 1; text-align: center; padding: 6px; background: #ebf5fb; color: #2980b9; text-decoration: none; border-radius: 6px; font-size: 0.75rem; font-weight: bold; }
+
+        /* Modified Footer for Admin Button */
+        .admin-footer { 
+            display: flex; 
+            justify-content: flex-end; 
+            margin-top: 40px; 
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+        }
+        .btn-admin { 
+            padding: 8px 16px; 
+            background: #2c3e50; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-size: 0.85rem; 
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-admin:hover { background: #34495e; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -66,13 +84,14 @@
         <!-- 2. Epidemiology -->
         <div class="card">
             <h2 class="card-title">
-                <a href="#">🧬 Epidemiology</a>
+                <a href="list.html?label=Epidemiology">🧬 Epidemiology</a>
                 <span class="post-count"><span id="count-Epidemiology">0</span> Articles</span>
             </h2>
             <p class="card-desc">Health patterns and research frameworks.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-Epidemiology"><li class="empty-text">Loading...</li></ul>
-            <!-- Epidemiology는 하위 버튼이 있으므로 별도의 more... 생략하거나 버튼과 연결 -->
+            <!-- Added More link here -->
+            <a href="list.html?label=Epidemiology" id="more-Epidemiology" class="more-link">more...</a>
             <div class="sub-links">
                 <a href="list.html?label=Epidemiology Reference Study" class="sub-link">Reference</a>
                 <a href="list.html?label=Epidemiology Study Design" class="sub-link">Design</a>
@@ -121,12 +140,13 @@
             <p class="card-desc">Latest Regulatory and Quality</p>
             <div class="list-label">World Wide News</div>
             <ul class="mini-post-list" id="list-RAQA-News"><li class="empty-text">Fetching news...</li></ul>
-            <!-- 뉴스는 구글 검색 결과이므로 별도의 more... 생략 또는 구글 뉴스 링크 -->
+            <!-- Added More link to Google News for this specific card -->
+            <a href="https://news.google.com/search?q=medical+device+regulatory+quality" target="_blank" class="more-link" style="display: inline-block;">more...</a>
         </div>
     </main>
 
     <footer class="admin-footer">
-        <a href="https://github.com/hyeonho4ko/hyeonho4ko.github.io/issues/new" class="btn-post" target="_blank">Write New Post</a>
+        <a href="https://github.com/hyeonho4ko/hyeonho4ko.github.io/issues/new" class="btn-admin" target="_blank">admin</a>
     </footer>
 
     <script>
@@ -147,7 +167,7 @@
                     issue.labels.forEach(labelObj => {
                         const l = labelObj.name;
                         if (l === 'English') { counts['English']++; if(buckets['English'].length < 3) buckets['English'].push(issue); }
-                        if (l === 'Epidemiology Reference Study' || l === 'Epidemiology Study Design') { 
+                        if (l === 'Epidemiology Reference Study' || l === 'Epidemiology Study Design' || l === 'Epidemiology') { 
                             if(!isEpi) { counts['Epidemiology']++; isEpi = true; }
                             if(buckets['Epidemiology'].length < 3) buckets['Epidemiology'].push(issue); 
                         }
@@ -160,7 +180,7 @@
                 Object.keys(buckets).forEach(cat => {
                     document.getElementById(`count-${cat}`).innerText = counts[cat];
                     
-                    // 글이 3개보다 많으면 more... 링크 노출
+                    // Show "more..." if there are more than 3 posts
                     const moreBtn = document.getElementById(`more-${cat}`);
                     if (moreBtn && counts[cat] > 3) {
                         moreBtn.style.display = 'inline-block';
