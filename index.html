@@ -36,7 +36,6 @@
 
         .empty-text { font-size: 0.85rem; color: #aaa; font-style: italic; padding-top: 10px; text-align: center; }
         
-        /* Updated Footer to push Admin button to the right */
         .admin-footer { display: flex; justify-content: flex-end; margin-top: 40px; padding: 20px 0; border-top: 1px solid #eee; }
         .btn-admin { padding: 8px 16px; background: #2c3e50; color: white; text-decoration: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
         .btn-admin:hover { background: #34495e; }
@@ -95,7 +94,7 @@
             <ul class="mini-post-list" id="list-AI"><li class="empty-text">Loading...</li></ul>
             <a href="list.html?label=AI" id="more-AI" class="more-link">more...</a>
         </div>
-        
+
         <!-- 5. Travel -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=Travel">✈️ Travel Stories</a><span class="post-count"><span id="count-Travel">0</span> Articles</span></h2>
@@ -103,6 +102,15 @@
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-Travel"><li class="empty-text">Loading...</li></ul>
             <a href="list.html?label=Travel" id="more-Travel" class="more-link">more...</a>
+        </div>
+
+        <!-- 6. Latest News (Restored) -->
+        <div class="card">
+            <h2 class="card-title" style="color: #d35400;">📰 Latest News</h2>
+            <p class="card-desc">Global RA/QA & AI Regulation</p>
+            <div class="list-label">World Wide Updates</div>
+            <ul class="mini-post-list" id="list-News"><li class="empty-text">Fetching news...</li></ul>
+            <a href="https://news.google.com/search?q=medical+device+regulatory+AI" target="_blank" class="more-link" style="display: inline-block;">more...</a>
         </div>
     </main>
 
@@ -139,11 +147,7 @@
                 Object.keys(buckets).forEach(cat => {
                     document.getElementById(`count-${cat}`).innerText = counts[cat];
                     const moreBtn = document.getElementById(`more-${cat}`);
-                    
-                    // Show 'more...' link if there are more than 3 posts
-                    if (moreBtn && counts[cat] > 3) {
-                        moreBtn.style.display = 'inline-block';
-                    }
+                    if (moreBtn && counts[cat] > 3) moreBtn.style.display = 'inline-block';
 
                     const container = document.getElementById(`list-${cat}`);
                     if (buckets[cat].length === 0) {
@@ -154,7 +158,29 @@
                 });
             } catch (e) { console.error(e); }
         }
+
+        async function fetchMedicalNews() {
+            const newsContainer = document.getElementById('list-News');
+            // Query: Medical Device + Regulatory/Quality/AI across USA, UK, Korea, Germany
+            const query = encodeURIComponent('"Medical Device" (Regulatory OR Quality OR AI) (USA OR UK OR Korea OR Germany) when:7d');
+            const rssUrl = `https://news.google.com/rss/search?q=${query}&hl=en-US&gl=US&ceid=US:en`;
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+            
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                if (data.status === 'ok') {
+                    newsContainer.innerHTML = data.items.slice(0, 5).map(item => 
+                        `<li class="mini-item"><a href="${item.link}" target="_blank">📰 ${item.title}</a></li>`
+                    ).join('');
+                }
+            } catch (e) { 
+                newsContainer.innerHTML = '<li class="empty-text">Failed to load news.</li>'; 
+            }
+        }
+
         distributeRecentPosts();
+        fetchMedicalNews();
     </script>
 </body>
 </html>
