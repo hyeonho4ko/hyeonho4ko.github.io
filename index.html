@@ -20,7 +20,6 @@
         .card-title a { text-decoration: none; color: #2980b9; flex-grow: 1; font-weight: bold; }
         
         .post-count { font-size: 0.7rem; color: #95a5a6; border: 1px solid #d5dbdb; padding: 0; border-radius: 4px; font-weight: 500; margin-left: 10px; letter-spacing: 0.05em; text-transform: uppercase; }
-        /* 카운트 링크 스타일 */
         .post-count a { display: block; padding: 2px 8px; text-decoration: none; color: inherit; transition: 0.2s; }
         .post-count a:hover { background: #ebf5fb; color: #2980b9; border-color: #2980b9; }
         
@@ -53,7 +52,6 @@
     </header>
     
     <main class="grid">
-        <!-- 1. English -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=English">📚 English Study</a><span class="post-count"><a href="list.html?label=English"><span id="count-English">0</span> Articles</a></span></h2>
             <p class="card-desc">Journey to professional English fluency.</p>
@@ -62,7 +60,6 @@
             <a href="list.html?label=English" id="more-English" class="more-link">more...</a>
         </div>
         
-        <!-- 2a. Epidemiology Reference -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=Epidemiology Reference Study">🧬 Epi Reference</a><span class="post-count"><a href="list.html?label=Epidemiology Reference Study"><span id="count-EpiRef">0</span> Articles</a></span></h2>
             <p class="card-desc">Key literature and reference frameworks.</p>
@@ -71,7 +68,6 @@
             <a href="list.html?label=Epidemiology Reference Study" id="more-EpiRef" class="more-link">more...</a>
         </div>
 
-        <!-- 2b. Epidemiology Study Design -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=Epidemiology Study Design">📐 Epi Study Design</a><span class="post-count"><a href="list.html?label=Epidemiology Study Design"><span id="count-EpiDesign">0</span> Articles</a></span></h2>
             <p class="card-desc">Methodologies and research design.</p>
@@ -80,7 +76,6 @@
             <a href="list.html?label=Epidemiology Study Design" id="more-EpiDesign" class="more-link">more...</a>
         </div>
         
-        <!-- 3. Medical Device -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=Medical Device">🏥 Medical Device</a><span class="post-count"><a href="list.html?label=Medical Device"><span id="count-Medical">0</span> Articles</a></span></h2>
             <p class="card-desc">Strategic insights on RA/QA compliance.</p>
@@ -89,7 +84,6 @@
             <a href="list.html?label=Medical Device" id="more-Medical" class="more-link">more...</a>
         </div>
         
-        <!-- 4. AI Tool -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=AITool">🤖 AI & Productivity</a><span class="post-count"><a href="list.html?label=AITool"><span id="count-AI">0</span> Articles</a></span></h2>
             <p class="card-desc">Enhancing workflows with AI tools.</p>
@@ -98,7 +92,6 @@
             <a href="list.html?label=AITool" id="more-AI" class="more-link">more...</a>
         </div>
 
-        <!-- 5. Travel -->
         <div class="card">
             <h2 class="card-title"><a href="list.html?label=Travel">✈️ Travel Stories</a><span class="post-count"><a href="list.html?label=Travel"><span id="count-Travel">0</span> Articles</a></span></h2>
             <p class="card-desc">Memories from global explorations.</p>
@@ -107,12 +100,11 @@
             <a href="list.html?label=Travel" id="more-Travel" class="more-link">more...</a>
         </div>
 
-        <!-- 6. Latest News -->
         <div class="card">
-            <h2 class="card-title" style="color: #d35400;"></h2>📰 Latest News</h2>
+            <h2 class="card-title" style="color: #d35400;">📰 Latest News</h2>
             <p class="card-desc">Global RA/QA & AI Regulation</p>
-            <div class="list-label">World Wide Updates</div>
-            <ul class="mini-post-list" id="list-News"><li class="empty-text">Fetching news...</li></ul>
+            <div class="list-label" id="news-update-label">World Wide Updates</div>
+            <ul class="mini-post-list" id="list-News"><li class="empty-text">Checking cache...</li></ul>
             <a href="https://news.google.com/search?q=%22Medical+Device%22+%28Regulatory+OR+Quality+OR+AI+OR+PCCP%29+%28FDA+OR+MDR+OR+MFDS+OR+MHRA%29" target="_blank" class="more-link" style="display: inline-block;">more...</a>
         </div>
     </main>
@@ -138,37 +130,18 @@
                     if (issue.pull_request) return;
                     const labelNames = issue.labels.map(l => l.name);
 
-                    if (labelNames.includes('English')) { 
-                        counts['English']++; 
-                        if(buckets['English'].length < 3) buckets['English'].push(issue); 
-                    }
-                    if (labelNames.includes('Epidemiology Reference Study')) { 
-                        counts['EpiRef']++; 
-                        if(buckets['EpiRef'].length < 3) buckets['EpiRef'].push(issue); 
-                    }
-                    if (labelNames.includes('Epidemiology Study Design')) { 
-                        counts['EpiDesign']++; 
-                        if(buckets['EpiDesign'].length < 3) buckets['EpiDesign'].push(issue); 
-                    }
-                    if (labelNames.includes('Medical') || labelNames.includes('Medical Device')) { 
-                        counts['Medical']++; 
-                        if(buckets['Medical'].length < 3) buckets['Medical'].push(issue); 
-                    }
-                    if (labelNames.includes('AI') || labelNames.includes('AITool')) { 
-                        counts['AI']++; 
-                        if(buckets['AI'].length < 3) buckets['AI'].push(issue); 
-                    }
-                    if (labelNames.includes('Travel')) { 
-                        counts['Travel']++; 
-                        if(buckets['Travel'].length < 3) buckets['Travel'].push(issue); 
-                    }
+                    if (labelNames.includes('English')) { counts['English']++; if(buckets['English'].length < 3) buckets['English'].push(issue); }
+                    if (labelNames.includes('Epidemiology Reference Study')) { counts['EpiRef']++; if(buckets['EpiRef'].length < 3) buckets['EpiRef'].push(issue); }
+                    if (labelNames.includes('Epidemiology Study Design')) { counts['EpiDesign']++; if(buckets['EpiDesign'].length < 3) buckets['EpiDesign'].push(issue); }
+                    if (labelNames.includes('Medical') || labelNames.includes('Medical Device')) { counts['Medical']++; if(buckets['Medical'].length < 3) buckets['Medical'].push(issue); }
+                    if (labelNames.includes('AI') || labelNames.includes('AITool')) { counts['AI']++; if(buckets['AI'].length < 3) buckets['AI'].push(issue); }
+                    if (labelNames.includes('Travel')) { counts['Travel']++; if(buckets['Travel'].length < 3) buckets['Travel'].push(issue); }
                 });
 
                 Object.keys(buckets).forEach(cat => {
                     document.getElementById(`count-${cat}`).innerText = counts[cat];
                     const moreBtn = document.getElementById(`more-${cat}`);
                     if (moreBtn && counts[cat] > 3) moreBtn.style.display = 'inline-block';
-
                     const container = document.getElementById(`list-${cat}`);
                     if (buckets[cat].length === 0) {
                         container.innerHTML = '<li class="empty-text">No posts found.</li>';
@@ -183,6 +156,26 @@
 
         async function fetchMedicalNews() {
             const newsContainer = document.getElementById('list-News');
+            const updateLabel = document.getElementById('news-update-label');
+            
+            // 24시간 업데이트 로직 (localStorage 활용)
+            const CACHE_KEY = 'medical_news_data';
+            const TIME_KEY = 'medical_news_timestamp';
+            const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+            
+            const cachedData = localStorage.getItem(CACHE_KEY);
+            const lastUpdate = localStorage.getItem(TIME_KEY);
+            const now = new Date().getTime();
+
+            // 캐시가 있고 24시간이 지나지 않았다면 저장된 데이터 사용
+            if (cachedData && lastUpdate && (now - lastUpdate < TWENTY_FOUR_HOURS)) {
+                renderNews(JSON.parse(cachedData));
+                const hoursLeft = Math.round((TWENTY_FOUR_HOURS - (now - lastUpdate)) / (1000 * 60 * 60));
+                updateLabel.innerText = `Updates in approx. ${hoursLeft}h`;
+                return;
+            }
+
+            // 데이터 새로 가져오기
             const keywords = '"Medical Device" (Regulatory OR Quality OR AI OR "EU AI Act" OR QMSR OR PCCP OR SaMD) (USA OR UK OR Korea OR Germany OR FDA OR MHRA OR MFDS OR EMA) when:7d';
             const query = encodeURIComponent(keywords);
             const rssUrl = `https://news.google.com/rss/search?q=${query}&hl=en-US&gl=US&ceid=US:en`;
@@ -192,13 +185,28 @@
                 const response = await fetch(apiUrl);
                 const data = await response.json();
                 if (data.status === 'ok') {
-                    newsContainer.innerHTML = data.items.slice(0, 5).map(item => 
-                        `<li class="mini-item"><a href="${item.link}" target="_blank">📰 ${item.title}</a></li>`
-                    ).join('');
+                    const items = data.items.slice(0, 5);
+                    // 데이터와 시간 저장
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(items));
+                    localStorage.setItem(TIME_KEY, now.toString());
+                    
+                    renderNews(items);
+                    updateLabel.innerText = "Just Updated";
                 }
             } catch (e) { 
-                newsContainer.innerHTML = '<li class="empty-text">Failed to load current regulatory news.</li>'; 
+                if (cachedData) {
+                    renderNews(JSON.parse(cachedData));
+                } else {
+                    newsContainer.innerHTML = '<li class="empty-text">Failed to load news.</li>';
+                }
             }
+        }
+
+        function renderNews(items) {
+            const newsContainer = document.getElementById('list-News');
+            newsContainer.innerHTML = items.map(item => 
+                `<li class="mini-item"><a href="${item.link}" target="_blank">📰 ${item.title}</a></li>`
+            ).join('');
         }
 
         distributeRecentPosts();
