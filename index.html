@@ -19,7 +19,10 @@
         .card-title { margin-top: 0; font-size: 1.2rem; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; }
         .card-title a { text-decoration: none; color: #2980b9; flex-grow: 1; font-weight: bold; }
         
-        .post-count { font-size: 0.7rem; color: #95a5a6; border: 1px solid #d5dbdb; padding: 2px 8px; border-radius: 4px; font-weight: 500; margin-left: 10px; letter-spacing: 0.05em; text-transform: uppercase; }
+        .post-count { font-size: 0.7rem; color: #95a5a6; border: 1px solid #d5dbdb; padding: 0; border-radius: 4px; font-weight: 500; margin-left: 10px; letter-spacing: 0.05em; text-transform: uppercase; }
+        /* 카운트 링크 스타일 */
+        .post-count a { display: block; padding: 2px 8px; text-decoration: none; color: inherit; transition: 0.2s; }
+        .post-count a:hover { background: #ebf5fb; color: #2980b9; border-color: #2980b9; }
         
         .card-desc { font-size: 0.85rem; color: #7f8c8d; margin-top: 0; margin-bottom: 15px; }
         
@@ -52,7 +55,7 @@
     <main class="grid">
         <!-- 1. English -->
         <div class="card">
-            <h2 class="card-title"><a href="list.html?label=English">📚 English Study</a><span class="post-count"><span id="count-English">0</span> Articles</span></h2>
+            <h2 class="card-title"><a href="list.html?label=English">📚 English Study</a><span class="post-count"><a href="list.html?label=English"><span id="count-English">0</span> Articles</a></span></h2>
             <p class="card-desc">Journey to professional English fluency.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-English"><li class="empty-text">Loading...</li></ul>
@@ -61,7 +64,7 @@
         
         <!-- 2a. Epidemiology Reference -->
         <div class="card">
-            <h2 class="card-title"><a href="list.html?label=Epidemiology Reference Study">🧬 Epi Reference</a><span class="post-count"><span id="count-EpiRef">0</span> Articles</span></h2>
+            <h2 class="card-title"><a href="list.html?label=Epidemiology Reference Study">🧬 Epi Reference</a><span class="post-count"><a href="list.html?label=Epidemiology Reference Study"><span id="count-EpiRef">0</span> Articles</a></span></h2>
             <p class="card-desc">Key literature and reference frameworks.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-EpiRef"><li class="empty-text">Loading...</li></ul>
@@ -70,25 +73,25 @@
 
         <!-- 2b. Epidemiology Study Design -->
         <div class="card">
-            <h2 class="card-title"><a href="list.html?label=Epidemiology Study Design">📐 Epi Study Design</a><span class="post-count"><span id="count-EpiDesign">0</span> Articles</span></h2>
+            <h2 class="card-title"><a href="list.html?label=Epidemiology Study Design">📐 Epi Study Design</a><span class="post-count"><a href="list.html?label=Epidemiology Study Design"><span id="count-EpiDesign">0</span> Articles</a></span></h2>
             <p class="card-desc">Methodologies and research design.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-EpiDesign"><li class="empty-text">Loading...</li></ul>
             <a href="list.html?label=Epidemiology Study Design" id="more-EpiDesign" class="more-link">more...</a>
         </div>
         
-        <!-- 3. Medical Device (링크 주소 수정: Medical -> Medical Device) -->
+        <!-- 3. Medical Device -->
         <div class="card">
-            <h2 class="card-title"><a href="list.html?label=Medical Device">🏥 Medical Device</a><span class="post-count"><span id="count-Medical">0</span> Articles</span></h2>
+            <h2 class="card-title"><a href="list.html?label=Medical Device">🏥 Medical Device</a><span class="post-count"><a href="list.html?label=Medical Device"><span id="count-Medical">0</span> Articles</a></span></h2>
             <p class="card-desc">Strategic insights on RA/QA compliance.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-Medical"><li class="empty-text">Loading...</li></ul>
             <a href="list.html?label=Medical Device" id="more-Medical" class="more-link">more...</a>
         </div>
         
-        <!-- 4. AI Tool (링크 주소 수정: AI -> AITool) -->
+        <!-- 4. AI Tool -->
         <div class="card">
-            <h2 class="card-title"><a href="list.html?label=AITool">🤖 AI & Productivity</a><span class="post-count"><span id="count-AI">0</span> Articles</span></h2>
+            <h2 class="card-title"><a href="list.html?label=AITool">🤖 AI & Productivity</a><span class="post-count"><a href="list.html?label=AITool"><span id="count-AI">0</span> Articles</a></span></h2>
             <p class="card-desc">Enhancing workflows with AI tools.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-AI"><li class="empty-text">Loading...</li></ul>
@@ -97,7 +100,7 @@
 
         <!-- 5. Travel -->
         <div class="card">
-            <h2 class="card-title"><a href="list.html?label=Travel">✈️ Travel Stories</a><span class="post-count"><span id="count-Travel">0</span> Articles</span></h2>
+            <h2 class="card-title"><a href="list.html?label=Travel">✈️ Travel Stories</a><span class="post-count"><a href="list.html?label=Travel"><span id="count-Travel">0</span> Articles</a></span></h2>
             <p class="card-desc">Memories from global explorations.</p>
             <div class="list-label">Recent Insights</div>
             <ul class="mini-post-list" id="list-Travel"><li class="empty-text">Loading...</li></ul>
@@ -106,7 +109,7 @@
 
         <!-- 6. Latest News -->
         <div class="card">
-            <h2 class="card-title" style="color: #d35400;">📰 Latest News</h2>
+            <h2 class="card-title" style="color: #d35400;"></h2>📰 Latest News</h2>
             <p class="card-desc">Global RA/QA & AI Regulation</p>
             <div class="list-label">World Wide Updates</div>
             <ul class="mini-post-list" id="list-News"><li class="empty-text">Fetching news...</li></ul>
@@ -147,12 +150,10 @@
                         counts['EpiDesign']++; 
                         if(buckets['EpiDesign'].length < 3) buckets['EpiDesign'].push(issue); 
                     }
-                    // 클릭해서 들어갈 때와 동일하게 Medical Device 라벨 체크
                     if (labelNames.includes('Medical') || labelNames.includes('Medical Device')) { 
                         counts['Medical']++; 
                         if(buckets['Medical'].length < 3) buckets['Medical'].push(issue); 
                     }
-                    // 클릭해서 들어갈 때와 동일하게 AITool 라벨 체크
                     if (labelNames.includes('AI') || labelNames.includes('AITool')) { 
                         counts['AI']++; 
                         if(buckets['AI'].length < 3) buckets['AI'].push(issue); 
