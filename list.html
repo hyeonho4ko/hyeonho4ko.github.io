@@ -1,3 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post List - Hyeonho's Archive</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        .back-home { display: inline-block; margin-bottom: 20px; text-decoration: none; color: #2980b9; font-weight: bold; }
+        .list-header { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; border-left: 5px solid #2980b9; }
+        .post-item { background: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #eee; display: block; text-decoration: none; color: inherit; transition: all 0.3s ease; }
+        .post-item:hover { transform: translateX(10px); border-color: #2980b9; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .post-item h3 { margin: 0 0 10px 0; color: #2980b9; }
+        .error-msg { background: #fdf2f2; color: #d93025; padding: 20px; border-radius: 8px; border: 1px solid #f5c6cb; margin-top: 20px; }
+        .loading { text-align: center; padding: 50px; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-home">← Back to Archive</a>
+    
+    <div class="list-header">
+        <h1 id="category-title">Posts</h1>
+        <p id="category-desc">Selected category posts.</p>
+    </div>
+    <div id="post-list">
+        <div class="loading">GitHub에서 글을 가져오는 중입니다...</div>
+    </div>
+    
     <script>
         const OWNER = 'hyeonho4ko'; 
         const REPO = 'hyeonho4ko.github.io'; 
@@ -29,7 +57,7 @@
                     const response = await fetch(apiUrl);
                     
                     if (!response.ok) {
-                        throw new Error(`GitHub API 에러: ${response.status} (${response.statusText})<br>계정명(${OWNER})이나 저장소명(${REPO})이 올바른지 확인하세요.`);
+                        throw new Error(`GitHub API 에러: ${response.status}<br>요청 한도를 초과했을 수 있습니다. 잠시 후 다시 시도해주세요.`);
                     }
                     issues = await response.json();
                     
@@ -42,7 +70,6 @@
                 if (issues.length === 0) {
                     postListContainer.innerHTML = `<div style="text-align:center; padding:50px;">
                         <p>'<b>${labelName}</b>' 레이블이 달린 Open된 글이 없습니다.</p>
-                        <p style="font-size:0.9rem; color:grey;">GitHub Issues에서 해당 글에 레이블을 추가했는지 확인하세요.</p>
                     </div>`;
                     return;
                 }
@@ -66,3 +93,5 @@
             }
         }
     </script>
+</body>
+</html>
