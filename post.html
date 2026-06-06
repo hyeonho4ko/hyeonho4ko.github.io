@@ -1,126 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post - Hyeonho's Archive</title>
-    <!-- 마크다운 변환 라이브러리 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <style>
-        :root {
-            --primary-color: #2980b9;
-            --text-color: #333;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Apple SD Gothic Neo, sans-serif; 
-            line-height: 1.8; 
-            color: var(--text-color); 
-            max-width: 900px; /* 기존 800px에서 확장하여 더 시원한 뷰 제공 */
-            margin: 0 auto; 
-            padding: 40px 20px; 
-            background-color: var(--bg-color); 
-            word-break: break-word;
-        }
-
-        .nav { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-bottom: 30px; 
-        }
-        .nav a { 
-            text-decoration: none; 
-            color: var(--primary-color); 
-            font-weight: bold; 
-            font-size: 0.95rem;
-            transition: opacity 0.2s;
-        }
-        .nav a:hover { opacity: 0.7; }
-        
-        article { 
-            background: var(--card-bg); 
-            padding: 50px; /* 패딩을 넓혀 여백의 미 강조 */
-            border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            margin-bottom: 40px; 
-        }
-
-        .post-title { 
-            color: #2c3e50; 
-            font-size: 2.4rem; 
-            margin-top: 0; 
-            margin-bottom: 15px; 
-            line-height: 1.2; 
-            letter-spacing: -0.02em;
-        }
-
-        .meta { 
-            color: #7f8c8d; 
-            font-size: 0.95rem; 
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 25px; 
-            margin-bottom: 35px; 
-        }
-
-        /* 본문 내 이미지 및 코드 스타일 최적화 */
-        #content { font-size: 1.1rem; }
-        #content img { max-width: 100%; border-radius: 8px; height: auto; display: block; margin: 20px auto; }
-        #content code { background: #f0f0f0; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
-        #content pre { background: #2d3436; color: #dfe6e9; padding: 20px; border-radius: 8px; overflow-x: auto; }
-        #content blockquote { border-left: 5px solid var(--primary-color); margin-left: 0; padding-left: 20px; color: #555; font-style: italic; }
-        
-        /* 댓글 영역 개선 */
-        .comments-section { 
-            background: var(--card-bg); 
-            padding: 40px 50px; 
-            border-radius: 16px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            margin-bottom: 60px; /* 하단 여유 공간 확보 */
-        }
-        .comments-header { 
-            font-size: 1.5rem; 
-            color: #2c3e50; 
-            border-bottom: 2px solid var(--bg-color); 
-            padding-bottom: 15px; 
-            margin-top: 0; 
-            margin-bottom: 30px; 
-        }
-
-        /* Utterances 내부 프레임이 잘리지 않도록 강제 설정 */
-        .utterances { 
-            max-width: 100% !important; 
-            width: 100% !important;
-        }
-
-        @media (max-width: 600px) {
-            article, .comments-section { padding: 25px; }
-            .post-title { font-size: 1.8rem; }
-        }
-    </style>
-</head>
-<body>
-    <div class="nav">
-        <a href="index.html">← Home Archive</a>
-        <a href="javascript:history.back()">Back to List</a>
-    </div>
-
-    <!-- 본문 영역 -->
-    <article>
-        <h1 id="post-title" class="post-title">Loading post...</h1>
-        <div id="post-meta" class="meta">Date</div>
-        <div id="content"></div>
-    </article>
-
-    <!-- 댓글 창 영역 -->
-    <div class="comments-section">
-        <h3 class="comments-header">Discussion</h3>
-        <div id="utterances-container">
-            <!-- Utterances 댓글창이 여기에 삽입됨 -->
-        </div>
-    </div>
-
     <script>
         const OWNER = 'hyeonho4ko';
         const REPO = 'hyeonho4ko.github.io';
@@ -133,12 +10,27 @@
                 return;
             }
 
-            try {
-                const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${id}`);
-                if (!response.ok) throw new Error("Post not found");
-                
-                const issue = await response.json();
+            const CACHE_KEY = `github_post_${id}`;
+            const TIME_KEY = `github_time_post_${id}`;
+            const CACHE_TTL = 10 * 60 * 1000; // 10분
 
+            try {
+                let issue;
+                const cachedData = localStorage.getItem(CACHE_KEY);
+                const lastFetch = localStorage.getItem(TIME_KEY);
+                const now = new Date().getTime();
+
+                if (cachedData && lastFetch && (now - lastFetch < CACHE_TTL)) {
+                    issue = JSON.parse(cachedData);
+                } else {
+                    const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues/${id}`);
+                    if (!response.ok) throw new Error("Post not found");
+                    issue = await response.json();
+                    
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(issue));
+                    localStorage.setItem(TIME_KEY, now.toString());
+                }
+                
                 // 타이틀 및 메타정보 설정
                 document.title = `${issue.title} - Hyeonho's Archive`;
                 document.getElementById('post-title').innerText = issue.title;
@@ -149,7 +41,7 @@
                 
                 // 마크다운 렌더링
                 document.getElementById('content').innerHTML = marked.parse(issue.body || "내용이 없습니다.");
-
+                
                 // 댓글창 로드
                 loadUtterances(id);
 
@@ -170,13 +62,10 @@
             script.setAttribute("theme", "github-light");
             script.setAttribute("crossorigin", "anonymous");
             script.async = true;
-
-            // 기존 내용을 비우고 추가 (중복 방지)
+            
             container.innerHTML = '';
             container.appendChild(script);
         }
 
         loadPost();
     </script>
-</body>
-</html>
