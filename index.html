@@ -1,127 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyeonho's Archive</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
-        header { text-align: center; padding: 60px 0; background: #2c3e50; color: white; border-radius: 12px; margin-bottom: 40px; }
-        .header-link { text-decoration: none; color: inherit; display: block; cursor: pointer; }
-        header h1 { margin: 0; font-size: 2.5rem; }
-        header p { opacity: 0.8; font-weight: 300; margin-top: 10px; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-        
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; display: flex; flex-direction: column; border: 1px solid #eee; height: 320px; position: relative; }
-        .card:hover { transform: translateY(-5px); border-color: #2980b9; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        
-        .card-title { margin-top: 0; font-size: 1.2rem; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: baseline; }
-        .card-title a { text-decoration: none; color: #2980b9; flex-grow: 1; font-weight: bold; }
-        
-        .post-count { font-size: 0.7rem; color: #95a5a6; border: 1px solid #d5dbdb; padding: 0; border-radius: 4px; font-weight: 500; margin-left: 10px; letter-spacing: 0.05em; text-transform: uppercase; }
-        .post-count a { display: block; padding: 2px 8px; text-decoration: none; color: inherit; transition: 0.2s; }
-        .post-count a:hover { background: #ebf5fb; color: #2980b9; border-color: #2980b9; }
-        
-        .card-desc { font-size: 0.85rem; color: #7f8c8d; margin-top: 0; margin-bottom: 15px; }
-        
-        .list-label { font-size: 0.75rem; font-weight: bold; color: #bdc3c7; margin-bottom: 8px; display: flex; align-items: center; text-transform: uppercase; letter-spacing: 0.05em; }
-        .list-label::before { content: "🕒"; margin-right: 5px; font-size: 0.8rem; }
-
-        .mini-post-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; overflow: hidden; }
-        .mini-item { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; font-size: 0.9rem; }
-        .mini-item a { text-decoration: none; color: #444; transition: color 0.2s; }
-        .mini-item a:hover { color: #2980b9; text-decoration: underline; }
-        
-        .more-link { font-size: 0.8rem; color: #2980b9; text-decoration: none; font-weight: bold; display: none; margin-top: 5px; transition: 0.2s; }
-        .more-link:hover { text-decoration: underline; color: #1a252f; }
-
-        .empty-text { font-size: 0.85rem; color: #aaa; font-style: italic; padding-top: 10px; text-align: center; }
-        
-        .admin-footer { display: flex; justify-content: flex-end; margin-top: 40px; padding: 20px 0; border-top: 1px solid #eee; }
-        .btn-admin { padding: 8px 16px; background: #2c3e50; color: white; text-decoration: none; border-radius: 6px; font-size: 0.85rem; font-weight: bold; transition: 0.3s; }
-        .btn-admin:hover { background: #34495e; }
-    </style>
-</head>
-<body>
-    <header>
-        <a href="index.html" class="header-link">
-            <h1>Hyeonho's Digital Archive</h1>
-            <p>English · Epidemiology · Medical Device · AI Tool · Travel</p>
-        </a>
-    </header>
-    
-    <main class="grid">
-        <div class="card">
-            <h2 class="card-title"><a href="list.html?label=English">📚 English Study</a><span class="post-count"><a href="list.html?label=English"><span id="count-English">0</span> Articles</a></span></h2>
-            <p class="card-desc">Journey to professional English fluency.</p>
-            <div class="list-label">Recent Insights</div>
-            <ul class="mini-post-list" id="list-English"><li class="empty-text">Loading...</li></ul>
-            <a href="list.html?label=English" id="more-English" class="more-link">more...</a>
-        </div>
-        
-        <div class="card">
-            <h2 class="card-title"><a href="list.html?label=Epidemiology Reference Study">🧬 Epi Reference</a><span class="post-count"><a href="list.html?label=Epidemiology Reference Study"><span id="count-EpiRef">0</span> Articles</a></span></h2>
-            <p class="card-desc">Key literature and reference frameworks.</p>
-            <div class="list-label">Recent Insights</div>
-            <ul class="mini-post-list" id="list-EpiRef"><li class="empty-text">Loading...</li></ul>
-            <a href="list.html?label=Epidemiology Reference Study" id="more-EpiRef" class="more-link">more...</a>
-        </div>
-
-        <div class="card">
-            <h2 class="card-title"><a href="list.html?label=Epidemiology Study Design">📐 Epi Study Design</a><span class="post-count"><a href="list.html?label=Epidemiology Study Design"><span id="count-EpiDesign">0</span> Articles</a></span></h2>
-            <p class="card-desc">Methodologies and research design.</p>
-            <div class="list-label">Recent Insights</div>
-            <ul class="mini-post-list" id="list-EpiDesign"><li class="empty-text">Loading...</li></ul>
-            <a href="list.html?label=Epidemiology Study Design" id="more-EpiDesign" class="more-link">more...</a>
-        </div>
-        
-        <div class="card">
-            <h2 class="card-title"><a href="list.html?label=Medical Device">🏥 Medical Device</a><span class="post-count"><a href="list.html?label=Medical Device"><span id="count-Medical">0</span> Articles</a></span></h2>
-            <p class="card-desc">Strategic insights on RA/QA compliance.</p>
-            <div class="list-label">Recent Insights</div>
-            <ul class="mini-post-list" id="list-Medical"><li class="empty-text">Loading...</li></ul>
-            <a href="list.html?label=Medical Device" id="more-Medical" class="more-link">more...</a>
-        </div>
-        
-        <div class="card">
-            <h2 class="card-title"><a href="list.html?label=AITool">🤖 AI & Productivity</a><span class="post-count"><a href="list.html?label=AITool"><span id="count-AI">0</span> Articles</a></span></h2>
-            <p class="card-desc">Enhancing workflows with AI tools.</p>
-            <div class="list-label">Recent Insights</div>
-            <ul class="mini-post-list" id="list-AI"><li class="empty-text">Loading...</li></ul>
-            <a href="list.html?label=AITool" id="more-AI" class="more-link">more...</a>
-        </div>
-
-        <div class="card">
-            <h2 class="card-title"><a href="list.html?label=Travel">✈️ Travel Stories</a><span class="post-count"><a href="list.html?label=Travel"><span id="count-Travel">0</span> Articles</a></span></h2>
-            <p class="card-desc">Memories from global explorations.</p>
-            <div class="list-label">Recent Insights</div>
-            <ul class="mini-post-list" id="list-Travel"><li class="empty-text">Loading...</li></ul>
-            <a href="list.html?label=Travel" id="more-Travel" class="more-link">more...</a>
-        </div>
-
-        <div class="card">
-            <h2 class="card-title" style="color: #d35400;">📰 Latest News</h2>
-            <p class="card-desc">Global RA/QA & AI Regulation</p>
-            <div class="list-label" id="news-update-label">World Wide Updates</div>
-            <ul class="mini-post-list" id="list-News"><li class="empty-text">Checking cache...</li></ul>
-            <a href="https://news.google.com/search?q=%22Medical+Device%22+%28Regulatory+OR+Quality+OR+AI+OR+PCCP%29+%28FDA+OR+MDR+OR+MFDS+OR+MHRA%29" target="_blank" class="more-link" style="display: inline-block;">more...</a>
-        </div>
-    </main>
-
-    <footer class="admin-footer">
-        <a href="https://github.com/hyeonho4ko/hyeonho4ko.github.io/issues/new" class="btn-admin" target="_blank">admin</a>
-    </footer>
-
     <script>
         const OWNER = 'hyeonho4ko';
         const REPO = 'hyeonho4ko.github.io';
         
         async function distributeRecentPosts() {
+            const CACHE_KEY = 'github_issues_all';
+            const TIME_KEY = 'github_issues_time';
+            const CACHE_TTL = 10 * 60 * 1000; // 10분(밀리초)
+
             try {
-                const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&per_page=100`);
-                if (!response.ok) throw new Error('API Error');
-                const issues = await response.json();
+                let issues;
+                const cachedData = localStorage.getItem(CACHE_KEY);
+                const lastFetch = localStorage.getItem(TIME_KEY);
+                const now = new Date().getTime();
+
+                // 10분이 지나지 않았고 캐시가 있다면 API 호출 생략
+                if (cachedData && lastFetch && (now - lastFetch < CACHE_TTL)) {
+                    issues = JSON.parse(cachedData);
+                    console.log("인덱스 페이지: 캐시된 데이터 사용");
+                } else {
+                    const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/issues?state=open&per_page=100`);
+                    if (!response.ok) throw new Error('API Error');
+                    issues = await response.json();
+                    
+                    // 새 데이터 캐싱
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(issues));
+                    localStorage.setItem(TIME_KEY, now.toString());
+                    console.log("인덱스 페이지: GitHub API 새로 호출");
+                }
                 
                 const buckets = { 'English': [], 'EpiRef': [], 'EpiDesign': [], 'Medical': [], 'AI': [], 'Travel': [] };
                 const counts = { 'English': 0, 'EpiRef': 0, 'EpiDesign': 0, 'Medical': 0, 'AI': 0, 'Travel': 0 };
@@ -143,6 +48,7 @@
                     const moreBtn = document.getElementById(`more-${cat}`);
                     if (moreBtn && counts[cat] > 3) moreBtn.style.display = 'inline-block';
                     const container = document.getElementById(`list-${cat}`);
+
                     if (buckets[cat].length === 0) {
                         container.innerHTML = '<li class="empty-text">No posts found.</li>';
                     } else {
@@ -151,14 +57,15 @@
                         ).join('');
                     }
                 });
-            } catch (e) { console.error(e); }
+            } catch (e) { 
+                console.error(e); 
+            }
         }
 
         async function fetchMedicalNews() {
+            // (이전 코드와 동일하므로 그대로 유지)
             const newsContainer = document.getElementById('list-News');
             const updateLabel = document.getElementById('news-update-label');
-            
-            // 24시간 업데이트 로직 (localStorage 활용)
             const CACHE_KEY = 'medical_news_data';
             const TIME_KEY = 'medical_news_timestamp';
             const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
@@ -167,7 +74,6 @@
             const lastUpdate = localStorage.getItem(TIME_KEY);
             const now = new Date().getTime();
 
-            // 캐시가 있고 24시간이 지나지 않았다면 저장된 데이터 사용
             if (cachedData && lastUpdate && (now - lastUpdate < TWENTY_FOUR_HOURS)) {
                 renderNews(JSON.parse(cachedData));
                 const hoursLeft = Math.round((TWENTY_FOUR_HOURS - (now - lastUpdate)) / (1000 * 60 * 60));
@@ -175,7 +81,6 @@
                 return;
             }
 
-            // 데이터 새로 가져오기
             const keywords = '"Medical Device" (Regulatory OR Quality OR AI OR "EU AI Act" OR QMSR OR PCCP OR SaMD) (USA OR UK OR Korea OR Germany OR FDA OR MHRA OR MFDS OR EMA) when:7d';
             const query = encodeURIComponent(keywords);
             const rssUrl = `https://news.google.com/rss/search?q=${query}&hl=en-US&gl=US&ceid=US:en`;
@@ -186,10 +91,8 @@
                 const data = await response.json();
                 if (data.status === 'ok') {
                     const items = data.items.slice(0, 5);
-                    // 데이터와 시간 저장
                     localStorage.setItem(CACHE_KEY, JSON.stringify(items));
                     localStorage.setItem(TIME_KEY, now.toString());
-                    
                     renderNews(items);
                     updateLabel.innerText = "Just Updated";
                 }
@@ -212,5 +115,3 @@
         distributeRecentPosts();
         fetchMedicalNews();
     </script>
-</body>
-</html>
