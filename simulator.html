@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3rd Party S/W 통합 V&V 및 PCCP 시뮬레이터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif; background-color: #f3f4f6; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="p-6 md:p-10">
+
+    <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-blue-900 text-white p-6">
+            <h1 class="text-2xl font-bold tracking-tight">다중기능 의료제품(Multiple Function Device) V&V 및 PCCP 대시보드</h1>
+            <p class="text-blue-200 mt-2 text-sm">초음파영상진단장치 제조사 & 3rd Party AI S/W 제조사 간 규제적 책임 분담 시뮬레이터</p>
+        </div>
+
+        <div class="p-6 md:p-8">
+            <div class="mb-8">
+                <label for="scenarioSelect" class="block text-sm font-semibold text-gray-700 mb-2">통합 및 변경 시나리오 선택 (Change Scenario)</label>
+                <select id="scenarioSelect" class="block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 bg-gray-50 font-medium shadow-sm transition-colors">
+                    <option value="0">1. 최초 시스템 통합 (Initial Integration)</option>
+                    <option value="1">2. S/W 알고리즘 업데이트 (PCCP 범위 내, Algorithm Tuning)</option>
+                    <option value="2">3. S/W 의도된 사용 확대 (PCCP 범위 외, Intended Use Expansion)</option>
+                    <option value="3">4. 초음파 하드웨어/프로브 변경 (Hardware Modification)</option>
+                </select>
+            </div>
+
+            <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Verification & Validation 책임 분할</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 fade-in" id="vvContainer">
+                </div>
+
+            <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">규제적 경로 및 인허가 대응 (Regulatory Pathway)</h2>
+            <div class="bg-blue-50 rounded-lg p-6 border border-blue-100 fade-in" id="regContainer">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // 시나리오 데이터베이스 (논문 프레임워크 기반)
+        const scenarios = [
+            {
+                title: "최초 시스템 통합",
+                vv_sw: ["알고리즘 자체 성능 검증 (민감도/특이도/AUC)", "스탠드얼론 S/W 사용성 평가 (Usability)"],
+                vv_shared: ["API 호환성 및 데이터 포맷 무결성 (DICOM)", "데이터 처리 지연 시간(Latency) 검증"],
+                vv_us: ["AI 구동 시 초음파 시스템 리소스(CPU/RAM) 부하 평가", "초음파 GUI 내 S/W 결과 표시 사용성 (UI/UX)"],
+                reg_sw: "신규 510(k) 신청 (단독 혹은 통합 명의)",
+                reg_us: "인터페이스 변경에 따른 위험도 평가 후 내부 Letter to File (QMS 기록)",
+                note: "통합으로 인해 초음파 본연의 의도된 사용이 변경되지 않음을 입증하는 것이 핵심입니다."
+            },
+            {
+                title: "S/W 알고리즘 업데이트 (PCCP 범위 내)",
+                vv_sw: ["PCCP 프로토콜에 따른 재학습(Re-training) 데이터 검증", "성능 향상 유효성 리포트 발행"],
+                vv_shared: ["변경된 AI 모델이 기존 초음파 워크플로우를 방해하지 않는지 회귀 테스트(Regression Test)"],
+                vv_us: ["소프트웨어 형상 관리(Configuration Management) 업데이트", "공급업체 품질 관리(Supplier QC) 문서 검토"],
+                reg_sw: "PCCP Logging (FDA 추가 제출 불필요)",
+                reg_us: "공급망 변경 제어 프로세스에 따른 내부 문서화 유지 (Letter to File 불필요)",
+                note: "양사 간 사전 체결된 품질 협약(Quality Agreement)에 따라 변경 사항 통지가 자동화되어야 합니다."
+            },
+            {
+                title: "S/W 의도된 사용 확대 (PCCP 범위 외)",
+                vv_sw: ["신규 적응증에 대한 실제 임상 근거(RWE) 수집", "신규 알고리즘 임상적 유효성(Clinical Validity) 평가"],
+                vv_shared: ["추가된 임상 정보가 초음파 장비의 기존 진단 목적(Intended Use)과 충돌하는지 위험 평가"],
+                vv_us: ["변경된 의도된 사용을 반영한 사용자 매뉴얼(IFU) 업데이트", "신규 라벨링(Labeling) 적절성 리뷰"],
+                reg_sw: "신규 510(k) 또는 De Novo 신청 (실질적 동등성 비교 불가 시)",
+                reg_us: "시스템 차원의 중대한 라벨링 변경 판단 시 Catch-up 510(k) 고려",
+                note: "3rd party S/W의 적응증 확대가 완제품의 안전성에 미치는 영향을 다각도로 평가해야 합니다."
+            },
+            {
+                title: "초음파 하드웨어/프로브 변경",
+                vv_sw: ["(제공받은 신규 데이터 기반) AI 성능 표류(Performance Drift) 발생 확인 및 모델 튜닝"],
+                vv_shared: ["신규 프로브의 영상 특성(해상도, Artifact)이 S/W의 요구 입력 사양(Data Spec)을 벗어나는지 교차 검증"],
+                vv_us: ["신규 프로브의 전기 기계적 안전성 및 음향 출력(Acoustic Output) 평가", "영상 처리 엔진 검증"],
+                reg_sw: "성능 저하 발생 시 PCCP 기반 수정 진행 (필요 시 신규 510(k))",
+                reg_us: "프로브 추가에 대한 초음파 제조사의 신규 510(k) 신청",
+                note: "하드웨어 특성 변화(영상 열화 등)가 S/W의 자동화 편향을 유발하지 않도록 하는 '역방향 PCCP' 설계가 권장됩니다."
+            }
+        ];
+
+        // DOM 요소 가져오기
+        const selectEl = document.getElementById('scenarioSelect');
+        const vvContainer = document.getElementById('vvContainer');
+        const regContainer = document.getElementById('regContainer');
+
+        // UI 렌더링 함수
+        function renderDashboard(index) {
+            const data = scenarios[index];
+
+            // 1. V&V 컨테이너 업데이트
+            vvContainer.innerHTML = `
+                <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
+                    <div class="flex items-center mb-3">
+                        <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2 py-1 rounded uppercase">3rd Party S/W</span>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">AI 제조사 자체 검증</h3>
+                    <ul class="list-disc pl-5 text-sm text-gray-600 space-y-1">
+                        ${data.vv_sw.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg shadow-sm p-5 relative">
+                    <div class="absolute -left-4 top-1/2 transform -translate-y-1/2 hidden md:block text-blue-300">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <span class="bg-blue-200 text-blue-900 text-xs font-bold px-2 py-1 rounded uppercase">Shared Boundary</span>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">인터페이스 공동 검증</h3>
+                    <ul class="list-disc pl-5 text-sm text-gray-600 space-y-1 font-medium">
+                        ${data.vv_shared.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    <div class="absolute -right-4 top-1/2 transform -translate-y-1/2 hidden md:block text-blue-300">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
+                    <div class="flex items-center mb-3">
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded uppercase">US Manufacturer</span>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">초음파 제조사 시스템 검증</h3>
+                    <ul class="list-disc pl-5 text-sm text-gray-600 space-y-1">
+                        ${data.vv_us.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+
+            // 2. 규제적 경로 업데이트
+            regContainer.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold text-blue-500 uppercase tracking-wider mb-1">AI S/W 측 Action</span>
+                        <div class="bg-white border-l-4 border-indigo-500 py-3 px-4 shadow-sm text-sm font-medium text-gray-700">
+                            ${data.reg_sw}
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold text-blue-500 uppercase tracking-wider mb-1">초음파 장비 측 Action</span>
+                        <div class="bg-white border-l-4 border-emerald-500 py-3 px-4 shadow-sm text-sm font-medium text-gray-700">
+                            ${data.reg_us}
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-blue-200">
+                    <p class="text-sm text-blue-900"><strong class="font-bold">전문가 제언 (Expert Note):</strong> ${data.note}</p>
+                </div>
+            `;
+
+            // 애니메이션 재트리거를 위한 클래스 토글
+            vvContainer.classList.remove('fade-in');
+            regContainer.classList.remove('fade-in');
+            void vvContainer.offsetWidth; // DOM reflow
+            vvContainer.classList.add('fade-in');
+            regContainer.classList.add('fade-in');
+        }
+
+        // 이벤트 리스너 등록
+        selectEl.addEventListener('change', (e) => {
+            renderDashboard(e.target.value);
+        });
+
+        // 초기 렌더링
+        renderDashboard(0);
+    </script>
+</body>
+</html>
